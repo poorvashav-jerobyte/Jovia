@@ -19,33 +19,30 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: false
 
-      - name: Verify token and destination access
+      - name: Verify destination access
         env:
           SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
         run: |
           if [ -z "$SYNC_TOKEN" ]; then
-            echo "ERROR: AUTO_SYNC_JOVIA secret is missing or empty"
+            echo "ERROR: AUTO_SYNC_JOVIA secret is empty"
             exit 1
           fi
 
-          echo "Token is available"
+          AUTH=$(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w 0)
 
-          git -c credential.helper= \
-            ls-remote \
-            "https://x-access-token:${SYNC_TOKEN}@github.com/PoorvashaV/jovia.git" \
-            HEAD >/dev/null || {
-              echo "ERROR: Cannot access destination repository"
-              exit 1
-            }
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
+            ls-remote https://github.com/PoorvashaV/jovia.git HEAD \
+            >/dev/null
 
-          echo "Destination repository access verified"
+          echo "Destination access successful"
 
-      - name: Push changes to Vercel repository
+      - name: Sync to Vercel repository
         env:
           SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
         run: |
-          git remote add vercel \
-            "https://x-access-token:${SYNC_TOKEN}@github.com/PoorvashaV/jovia.git"
+          AUTH=$(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w 0)
 
-          git -c credential.helper= push vercel HEAD:main
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
+            push https://github.com/PoorvashaV/jovia.git HEAD:main
