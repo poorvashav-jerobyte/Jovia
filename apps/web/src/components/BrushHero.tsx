@@ -323,9 +323,9 @@ export default function BrushHero() {
             {settings.company_name.toUpperCase()}
           </span>
 
-          <span className="canvas-overlay__byline">
+          {/* <span className="canvas-overlay__byline">
             BY NAMRATA VIJ
-          </span>
+          </span> */}
         </div>
 
         {/* HERO CONTENT */}
