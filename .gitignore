@@ -6,3 +6,5 @@ dist/
 
 .DS_Store
 *.log
+apps/web/web.zip
+apps/api/api.zip
