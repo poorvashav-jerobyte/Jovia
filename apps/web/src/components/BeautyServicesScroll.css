@@ -1,0 +1,2266 @@
+
+/* ==================================================
+   JOVIA MUA — SCROLL BEAUTY SERVICES
+   Side-by-side mobile + front-facing opening products
+   ================================================== */
+
+.jovia-services-scroll {
+  position: relative;
+  width: 100%;
+  isolation: isolate;
+  background: #080707;
+  color: #f8eee4;
+}
+
+.jovia-services-scroll *,
+.jovia-services-scroll *::before,
+.jovia-services-scroll *::after {
+  box-sizing: border-box;
+}
+
+.jovia-services-sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100svh;
+  min-height: 0;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      ellipse at 35% 62%,
+      rgba(135, 88, 36, .16),
+      transparent 48%
+    ),
+    linear-gradient(
+      125deg,
+      #070606,
+      #130d0b 52%,
+      #070606
+    );
+}
+
+.jovia-services-bg-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 38%,
+    rgba(0, 0, 0, .38)
+  );
+}
+
+/* ==================================================
+   SECTION HEADING
+   ================================================== */
+
+.jovia-services-heading {
+  position: relative;
+  z-index: 4;
+  width: 100%;
+  padding:
+    clamp(96px, 13vh, 140px)
+    20px
+    12px;
+  text-align: center;
+}
+
+.jovia-services-kicker {
+  margin: 0;
+  color: #d0ae74;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .28em;
+}
+
+.jovia-services-heading h2 {
+  max-width: 1100px;
+  margin: 17px auto 12px;
+  color: #f9eee4;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(30px, 4vw, 62px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -.045em;
+}
+
+.jovia-services-heading h2 em {
+  color: #d2b080;
+  font-weight: 400;
+}
+
+.jovia-services-subtitle {
+  margin: 0;
+  color: #ae9e93;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* ==================================================
+   SIDE-BY-SIDE LAYOUT
+   ================================================== */
+
+.jm-service-pair {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  width: min(1410px, 95%);
+  height: calc(100% - 265px);
+  min-height: 0;
+  margin: 0 auto;
+  align-items: center;
+  gap: clamp(14px, 2vw, 35px);
+  animation: jm-pair-enter .45s ease both;
+}
+
+/* Product left, card right */
+
+.jm-pair-normal {
+  grid-template-columns:
+    minmax(0, 42%)
+    minmax(0, 58%);
+}
+
+.jm-pair-normal .jm-product-stage {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.jm-pair-normal .jm-service-card-stage {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* Card left, product right */
+
+.jm-pair-reverse {
+  grid-template-columns:
+    minmax(0, 58%)
+    minmax(0, 42%);
+}
+
+.jm-pair-reverse .jm-service-card-stage {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.jm-pair-reverse .jm-product-stage {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+/* ==================================================
+   COMMON PRODUCT SCENE
+   ================================================== */
+
+.jm-product-stage {
+  --jm-reveal: 0;
+  --jm-enter: 0;
+
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  perspective: 1100px;
+}
+
+.jm-product-ambient {
+  position: absolute;
+  width: min(90%, 470px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(199, 151, 73, .25),
+    rgba(102, 65, 28, .09) 42%,
+    transparent 72%
+  );
+  filter: blur(25px);
+  animation: jm-ambient-pulse 5s ease-in-out infinite;
+}
+
+.jm-product-orbit {
+  position: absolute;
+  width: min(82%, 410px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(217, 178, 115, .2);
+  border-radius: 50%;
+  transform: rotateX(72deg) rotate(-18deg);
+  opacity: .45;
+}
+
+.jm-product-orbit.orbit-two {
+  width: min(96%, 480px);
+  opacity: .2;
+  transform: rotateX(68deg) rotate(35deg);
+}
+
+.jm-product-visual {
+  position: relative;
+  z-index: 2;
+  width: 390px;
+  height: 440px;
+  flex-shrink: 0;
+  transform-origin: center;
+  opacity: calc(.65 + var(--jm-enter) * .35);
+  animation: jm-product-float 5.5s ease-in-out infinite;
+}
+
+.jm-product-caption {
+  position: absolute;
+  bottom: 3%;
+  left: 8%;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #d2b27e;
+  font-size: 9px;
+  letter-spacing: .16em;
+  white-space: nowrap;
+}
+
+.jm-product-caption i {
+  width: 32px;
+  height: 1px;
+  background: #a17c4d;
+}
+
+.jm-product-caption span:last-child {
+  color: #a18560;
+  font-size: 8px;
+}
+
+.jm-product-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.jm-product-particles span {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #f3d7a4;
+  box-shadow: 0 0 12px #e9bd74;
+  opacity: calc(var(--jm-reveal) * .75);
+  animation:
+    jm-particle-float
+    4s ease-in-out infinite alternate;
+}
+
+.jm-product-particles span:nth-child(1) {
+  left: 12%;
+  top: 22%;
+}
+
+.jm-product-particles span:nth-child(2) {
+  left: 78%;
+  top: 13%;
+  animation-delay: -.4s;
+}
+
+.jm-product-particles span:nth-child(3) {
+  left: 90%;
+  top: 38%;
+  animation-delay: -1s;
+}
+
+.jm-product-particles span:nth-child(4) {
+  left: 15%;
+  top: 62%;
+  animation-delay: -1.6s;
+}
+
+.jm-product-particles span:nth-child(5) {
+  left: 63%;
+  top: 9%;
+  animation-delay: -2s;
+}
+
+.jm-product-particles span:nth-child(6) {
+  left: 30%;
+  top: 84%;
+  animation-delay: -2.6s;
+}
+
+.jm-product-particles span:nth-child(7) {
+  left: 86%;
+  top: 76%;
+  animation-delay: -3s;
+}
+
+.jm-product-particles span:nth-child(8) {
+  left: 50%;
+  top: 91%;
+  animation-delay: -3.5s;
+}
+
+.jm-product-particles span:nth-child(9) {
+  left: 17%;
+  top: 34%;
+}
+
+.jm-product-particles span:nth-child(10) {
+  left: 75%;
+  top: 57%;
+}
+
+.jm-product-particles span:nth-child(11) {
+  left: 42%;
+  top: 17%;
+}
+
+.jm-product-particles span:nth-child(12) {
+  left: 92%;
+  top: 83%;
+}
+
+/* ==================================================
+   PRODUCT 1 — ORIGINAL LIPSTICK
+   ================================================== */
+
+.jm-lipstick {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-10deg);
+}
+
+.jm-lipstick-tube {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  width: 92px;
+  height: 318px;
+  transform: translateX(-50%);
+}
+
+.jm-lipstick-body {
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  width: 92px;
+  height: 199px;
+  border: 1px solid #79603b;
+  border-radius: 5px 5px 12px 12px;
+  background: linear-gradient(
+    90deg,
+    #030303,
+    #242424 13%,
+    #383632 20%,
+    #090909 43%,
+    #202020 67%,
+    #050505 89%,
+    #000
+  );
+  box-shadow:
+    inset 4px 0 8px #ffffff13,
+    inset -5px 0 8px #000,
+    9px 9px 20px #0009;
+}
+
+.jm-lipstick-brand {
+  position: absolute;
+  top: 68px;
+  inset-inline: 0;
+  color: #dfbd7e;
+  font: 15px Georgia, serif;
+  letter-spacing: .12em;
+  text-align: center;
+}
+
+.jm-lipstick-brand small {
+  display: block;
+  margin-top: 5px;
+  font-size: 8px;
+  letter-spacing: .3em;
+}
+
+.jm-lipstick-base {
+  position: absolute;
+  z-index: 4;
+  bottom: 0;
+  left: 0;
+  width: 92px;
+  height: 10px;
+  border-radius: 0 0 9px 9px;
+  background: linear-gradient(
+    90deg,
+    #5d3b19,
+    #f1d89b 24%,
+    #a97735 49%,
+    #e4c077 77%,
+    #422b12
+  );
+}
+
+.jm-lipstick-gold-neck {
+  position: absolute;
+  z-index: 1;
+  bottom: 190px;
+  left: 11px;
+  width: 70px;
+  height: 66px;
+  background: linear-gradient(
+    90deg,
+    #66451f,
+    #efcb79 23%,
+    #fff0b7 32%,
+    #a3702e 61%,
+    #d9a85a 81%,
+    #5b3d1a
+  );
+}
+
+.jm-lipstick-gold-ring {
+  position: absolute;
+  z-index: 5;
+  bottom: 189px;
+  left: 0;
+  width: 92px;
+  height: 19px;
+  border-block: 2px solid #d2ac63;
+  background: linear-gradient(
+    90deg,
+    #4c3216,
+    #e5c27a 22%,
+    #98702e 49%,
+    #f6dea0 77%,
+    #483119
+  );
+}
+
+.jm-lipstick-bullet {
+  position: absolute;
+  z-index: 2;
+  bottom: 244px;
+  left: 18px;
+  width: 57px;
+  height: 86px;
+  transform-origin: center bottom;
+  transform: scaleY(
+    calc(.05 + var(--jm-reveal) * .95)
+  );
+  clip-path: polygon(
+    0 30%,
+    72% 2%,
+    94% 7%,
+    100% 18%,
+    100% 100%,
+    0 100%
+  );
+  border-radius: 7px 8px 2px 2px;
+  background: linear-gradient(
+    90deg,
+    #35040c,
+    #7e1728 18%,
+    #bc4856 34%,
+    #8b2031 55%,
+    #440613 88%,
+    #26030a
+  );
+}
+
+.jm-lipstick-bullet-shine {
+  position: absolute;
+  top: 16px;
+  left: 12px;
+  width: 10px;
+  height: 60px;
+  background: #ff9a9770;
+  filter: blur(6px);
+}
+
+.jm-lipstick-cap {
+  position: absolute;
+  z-index: 6;
+  bottom: 26px;
+  left: 50%;
+  width: 98px;
+  height: 320px;
+  border: 1px solid #7e6940;
+  border-radius: 9px 9px 5px 5px;
+  background: linear-gradient(
+    90deg,
+    #020202,
+    #1d1d1d 12%,
+    #393733 20%,
+    #0b0b0b 43%,
+    #171717 70%,
+    #030303 91%
+  );
+  transform-origin: center bottom;
+  transform:
+    translateX(
+      calc(-50% - var(--jm-reveal) * 122px)
+    )
+    translateY(
+      calc(var(--jm-reveal) * -95px)
+    )
+    rotate(
+      calc(var(--jm-reveal) * -18deg)
+    );
+  box-shadow:
+    inset 3px 0 7px #eee3b119,
+    10px 10px 22px #000a;
+}
+
+.jm-cap-highlight {
+  position: absolute;
+  top: 14px;
+  bottom: 15px;
+  left: 22px;
+  width: 10px;
+  background: #ffffff13;
+  filter: blur(4px);
+}
+
+.jm-cap-monogram {
+  position: absolute;
+  top: 112px;
+  width: 100%;
+  color: #dabc7f;
+  font: 30px Georgia, serif;
+  text-align: center;
+}
+
+.jm-cap-base {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 13px;
+  border-top: 1px solid #f3d89a;
+  background: linear-gradient(
+    90deg,
+    #483016,
+    #d7b270 25%,
+    #f0d594 37%,
+    #95702e 70%,
+    #3f2910
+  );
+}
+
+/* ==================================================
+   PRODUCT 2 — FRONT-OPENING FOUNDATION COMPACT
+
+   Important:
+   Lid and mirror remain on the visible front side.
+   No rotateY(360deg).
+   No lid flipping behind the powder.
+   ================================================== */
+
+.jm-foundation {
+  position: absolute;
+  inset: 0;
+  perspective: 1200px;
+}
+
+.jm-foundation-shadow {
+  position: absolute;
+  bottom: 56px;
+  left: 50%;
+  width: 310px;
+  height: 45px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: #000;
+  filter: blur(20px);
+}
+
+.jm-foundation-product {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-5deg);
+}
+
+.jm-foundation-base {
+  position: absolute;
+  z-index: 2;
+  bottom: 88px;
+  left: 50%;
+  width: 290px;
+  height: 155px;
+  transform: translateX(-50%);
+  border: 11px solid #c39b5d;
+  border-bottom-width: 20px;
+  border-radius: 50%;
+  background: linear-gradient(
+    130deg,
+    #27221c,
+    #090807 72%
+  );
+  box-shadow:
+    0 12px 0 #805927,
+    0 20px 0 #372413,
+    0 28px 25px #000a,
+    inset 0 0 14px #000;
+}
+
+.jm-foundation-base-edge {
+  position: absolute;
+  inset: -8px;
+  border: 2px solid #f7d99a;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.jm-foundation-gold-rim {
+  position: absolute;
+  inset: 4px;
+  padding: 5px;
+  border: 3px solid #6d4c27;
+  border-radius: 50%;
+  background: #1b1410;
+}
+
+.jm-foundation-powder {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 33% 23%,
+    #f4d9b8,
+    #e2b890 37%,
+    #c48b65 72%,
+    #87553e
+  );
+  box-shadow:
+    inset 0 0 16px #7b4b2c,
+    inset 0 5px 8px #fff3d787;
+}
+
+.jm-foundation-powder-glow {
+  position: absolute;
+  top: 5%;
+  left: 13%;
+  width: 60%;
+  height: 40%;
+  border-radius: 50%;
+  background: #fff8e188;
+  filter: blur(17px);
+}
+
+.jm-foundation-powder-logo {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  color: #8e604598;
+  font: 22px Georgia, serif;
+  letter-spacing: .18em;
+}
+
+.jm-foundation-powder-logo small {
+  font-size: 9px;
+  letter-spacing: .3em;
+}
+
+.jm-foundation-lock {
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  width: 55px;
+  height: 12px;
+  transform: translateX(-50%);
+  border: 1px solid #fae3a6;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(
+    90deg,
+    #68461f,
+    #ffe5aa,
+    #987032
+  );
+}
+
+.jm-foundation-hinge {
+  position: absolute;
+  z-index: 1;
+  bottom: 205px;
+  left: 50%;
+  display: flex;
+  width: 82px;
+  height: 20px;
+  gap: 3px;
+  transform: translateX(-50%);
+}
+
+.jm-foundation-hinge span {
+  flex: 1;
+  border-radius: 4px;
+  background: linear-gradient(
+    #fff1bf,
+    #ba8b47,
+    #563918
+  );
+}
+
+/* The moving top lid stays in front of the base */
+
+.jm-foundation-lid {
+  position: absolute;
+  z-index: 5;
+  bottom: 103px;
+  left: 50%;
+  width: 290px;
+  height: 160px;
+
+  transform:
+    translateX(-50%)
+    translateY(
+      calc(var(--jm-reveal) * -148px)
+    )
+    rotateX(
+      calc(var(--jm-reveal) * -13deg)
+    )
+    rotateZ(
+      calc(var(--jm-reveal) * -4deg)
+    );
+
+  transform-origin: 50% 85%;
+}
+
+.jm-foundation-lid-shell {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 11px solid #c7a065;
+  border-radius: 50%;
+  background: #15110e;
+  box-shadow:
+    inset 0 0 0 2px #f3d89e,
+    0 12px 22px #000a;
+}
+
+.jm-foundation-lid-cover,
+.jm-foundation-lid-mirror {
+  position: absolute;
+  inset: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+/* Outer lid disappears as the interior appears */
+
+.jm-foundation-lid-cover {
+  z-index: 2;
+  background: radial-gradient(
+    ellipse at 30% 25%,
+    #3f3931,
+    #090909 65%,
+    #231a14
+  );
+  opacity: calc(1 - var(--jm-reveal));
+}
+
+.jm-foundation-monogram {
+  color: #e6c483;
+  font: 62px Georgia, serif;
+}
+
+.jm-foundation-lid-cover small {
+  color: #d8b87d;
+  font-size: 11px;
+  letter-spacing: .18em;
+}
+
+.jm-foundation-lid-mirror {
+  z-index: 1;
+  padding: 5px;
+  border: 4px solid #896735;
+  background: #1a1713;
+  opacity: var(--jm-reveal);
+}
+
+.jm-foundation-mirror-glass {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(
+    125deg,
+    #e6e0d1,
+    #8c9fa5 24%,
+    #2b3c46 51%,
+    #91a9b1 76%,
+    #eee5d1
+  );
+  box-shadow: inset 0 0 22px #0b1922;
+}
+
+.jm-foundation-reflection {
+  position: absolute;
+  top: -25%;
+  left: -50%;
+  width: 35%;
+  height: 170%;
+  transform:
+    translateX(
+      calc(var(--jm-reveal) * 250px)
+    )
+    rotate(30deg);
+  background: #fff7e3a8;
+  filter: blur(12px);
+}
+
+.jm-foundation-mirror-glass span {
+  position: absolute;
+  bottom: 24px;
+  width: 100%;
+  color: #ffffffb0;
+  text-align: center;
+  font: 12px Georgia, serif;
+  letter-spacing: .15em;
+}
+
+.jm-product-glint {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff5d3;
+  box-shadow: 0 0 14px 5px #e4bf7e88;
+  opacity: var(--jm-reveal);
+}
+
+.jm-glint-one {
+  top: 27%;
+  left: 22%;
+}
+
+.jm-glint-two {
+  top: 69%;
+  right: 19%;
+}
+
+/* ==================================================
+   PRODUCT 3 — FRONT-OPENING JEWELLERY BOX
+   ================================================== */
+
+.jm-jewellery {
+  position: absolute;
+  inset: 0;
+  perspective: 1100px;
+}
+
+.jm-jewellery-shadow {
+  position: absolute;
+  bottom: 66px;
+  left: 50%;
+  width: 300px;
+  height: 45px;
+  border-radius: 50%;
+  background: #000;
+  filter: blur(19px);
+  transform: translateX(-50%);
+}
+
+.jm-jewellery-product {
+  position: absolute;
+  inset: 0;
+  transform: rotate(-4deg);
+}
+
+.jm-jewellery-back {
+  position: absolute;
+  z-index: 1;
+  bottom: 165px;
+  left: 50%;
+  width: 256px;
+  height: 112px;
+  transform: translateX(-50%);
+  border: 5px solid #b08b51;
+  border-radius: 10px;
+  background: radial-gradient(
+    ellipse at center,
+    #62364b,
+    #170b16 77%
+  );
+}
+
+.jm-jewellery-base {
+  position: absolute;
+  z-index: 3;
+  bottom: 88px;
+  left: 50%;
+  width: 270px;
+  height: 125px;
+  transform: translateX(-50%);
+  border: 5px solid #c09a5b;
+  border-radius: 11px 11px 18px 18px;
+  background: linear-gradient(
+    115deg,
+    #060606,
+    #302b27 25%,
+    #090909 70%,
+    #221b16
+  );
+  box-shadow:
+    inset 3px 0 10px #ffffff19,
+    0 12px 0 #684721,
+    0 24px 25px #000b;
+}
+
+.jm-jewellery-velvet {
+  position: absolute;
+  inset: 9px 10px 23px;
+  overflow: visible;
+  border: 2px solid #75455c;
+  border-radius: 10px;
+  background: radial-gradient(
+    ellipse at center,
+    #76435a,
+    #210e1b 77%
+  );
+  box-shadow: inset 0 0 15px #0009;
+}
+
+.jm-jewellery-slot {
+  position: absolute;
+  top: 37%;
+  left: 50%;
+  width: 72px;
+  height: 12px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #15080e;
+}
+
+.jm-jewellery-ring {
+  position: absolute;
+  z-index: 4;
+  top: 34%;
+  left: 50%;
+  width: 57px;
+  height: 71px;
+
+  transform:
+    translate(-50%, -40%)
+    translateY(
+      calc((1 - var(--jm-reveal)) * 25px)
+    )
+    scale(
+      calc(.55 + var(--jm-reveal) * .45)
+    );
+
+  opacity: var(--jm-reveal);
+}
+
+.jm-jewellery-band {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 43px;
+  height: 49px;
+  transform: translateX(-50%);
+  border: 8px solid #dcba75;
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 4px #fff4c1,
+    0 0 12px #e5bf7c55;
+}
+
+.jm-jewellery-diamond {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 50%;
+  width: 34px;
+  height: 34px;
+  transform: translateX(-50%) rotate(45deg);
+  border: 3px solid #efdfbc;
+  background: conic-gradient(
+    from 35deg,
+    #fff,
+    #b4cfdb,
+    #f8ffff,
+    #8da4af,
+    #fff,
+    #dae9ee,
+    #fff
+  );
+  box-shadow:
+    0 0 16px #ffffffb0,
+    0 0 30px #e6c17f77;
+}
+
+.jm-jewellery-diamond span {
+  position: absolute;
+  inset: 5px;
+  border: 1px solid #fff;
+  background: linear-gradient(
+    135deg,
+    #ffffffc8,
+    transparent
+  );
+}
+
+.jm-jewellery-front {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 33px;
+  border-top: 1px solid #d3ae72;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(
+    90deg,
+    #060606,
+    #292622 21%,
+    #10100f 65%,
+    #050505
+  );
+}
+
+.jm-jewellery-clasp {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  width: 27px;
+  height: 15px;
+  transform: translateX(-50%);
+  border: 1px solid #ffe4aa;
+  border-radius: 3px;
+  background: linear-gradient(
+    90deg,
+    #76511e,
+    #f4d99b,
+    #946b31
+  );
+}
+
+/* Lid moves UP, not behind the box */
+
+.jm-jewellery-lid {
+  position: absolute;
+  z-index: 5;
+  bottom: 125px;
+  left: 50%;
+  width: 270px;
+  height: 125px;
+
+  transform:
+    translateX(-50%)
+    translateY(
+      calc(var(--jm-reveal) * -111px)
+    )
+    rotateX(
+      calc(var(--jm-reveal) * -12deg)
+    );
+
+  transform-origin: 50% 100%;
+}
+
+.jm-jewellery-lid-shell {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 5px solid #c7a164;
+  border-radius: 12px 12px 6px 6px;
+  background: #0b0909;
+  box-shadow:
+    inset 3px 0 8px #ffffff20,
+    0 12px 24px #000a;
+}
+
+.jm-jewellery-cover,
+.jm-jewellery-lid-inside {
+  position: absolute;
+  inset: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 7px;
+}
+
+.jm-jewellery-cover {
+  z-index: 2;
+  gap: 6px;
+  border: 1px solid #8b6b45;
+  color: #e0c084;
+  background: linear-gradient(
+    135deg,
+    #050505,
+    #302b27 25%,
+    #090909 75%
+  );
+  opacity: calc(1 - var(--jm-reveal));
+}
+
+.jm-jewellery-cover span {
+  font: 25px Georgia, serif;
+  letter-spacing: .18em;
+}
+
+.jm-jewellery-cover small {
+  font-size: 9px;
+  letter-spacing: .3em;
+}
+
+.jm-jewellery-lid-inside {
+  z-index: 1;
+  padding: 8px;
+  background: #24121d;
+  opacity: var(--jm-reveal);
+}
+
+.jm-jewellery-lining {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  border: 2px solid #876346;
+  border-radius: 6px;
+  background: radial-gradient(
+    ellipse,
+    #633950,
+    #190d18 80%
+  );
+}
+
+.jm-jewellery-lining span {
+  color: #dfc18c;
+  font: 14px Georgia, serif;
+  letter-spacing: .15em;
+}
+
+/* ==================================================
+   PRODUCT 4 — HAND MIRROR REVEAL
+   ================================================== */
+
+.jm-handmirror {
+  position: absolute;
+  inset: 0;
+}
+
+.jm-mirror-shadow {
+  position: absolute;
+  bottom: 27px;
+  left: 50%;
+  width: 195px;
+  height: 32px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: #000;
+  filter: blur(19px);
+}
+
+.jm-mirror-product {
+  position: absolute;
+  inset: 0;
+  transform:
+    rotate(
+      calc(-12deg + var(--jm-reveal) * 13deg)
+    )
+    translateY(
+      calc((1 - var(--jm-reveal)) * 18px)
+    );
+}
+
+.jm-mirror-crown {
+  position: absolute;
+  z-index: 4;
+  top: 8px;
+  left: 50%;
+  width: 32px;
+  height: 32px;
+  transform: translateX(-50%) rotate(45deg);
+  border: 5px solid #e6c382;
+  background: linear-gradient(
+    135deg,
+    #795326,
+    #f6dda0
+  );
+}
+
+.jm-mirror-crown span {
+  position: absolute;
+  inset: 5px;
+  background: #4d3018;
+}
+
+.jm-mirror-head {
+  position: absolute;
+  z-index: 3;
+  top: 28px;
+  left: 50%;
+  width: 232px;
+  height: 270px;
+  transform: translateX(-50%);
+}
+
+.jm-mirror-gold-frame {
+  width: 100%;
+  height: 100%;
+  padding: 11px;
+  border: 3px solid #f3d898;
+  border-radius: 50%;
+  background: linear-gradient(
+    110deg,
+    #533719,
+    #e3c17a 16%,
+    #fff0b5 31%,
+    #9a6d31 53%,
+    #dbb775 79%,
+    #483017
+  );
+  box-shadow:
+    inset 0 0 0 3px #7c572e,
+    0 0 17px #e3be6d34,
+    6px 13px 25px #0008;
+}
+
+.jm-mirror-inner-frame {
+  width: 100%;
+  height: 100%;
+  padding: 6px;
+  border: 4px solid #61431f;
+  border-radius: 50%;
+  background: #1d1a17;
+}
+
+.jm-mirror-glass {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 50%;
+  background: linear-gradient(
+    130deg,
+    #b7c1c1,
+    #52636a 23%,
+    #25333b 45%,
+    #788992 72%,
+    #e4e2d8
+  );
+  box-shadow:
+    inset 0 0 27px #0c1824,
+    inset 0 0 8px #ffffff80;
+}
+
+.jm-mirror-shine {
+  position: absolute;
+  top: -35%;
+  left: -60%;
+  width: 45%;
+  height: 175%;
+  transform:
+    translateX(
+      calc(var(--jm-reveal) * 310px)
+    )
+    rotate(30deg);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #fffdf1d0,
+    transparent
+  );
+  filter: blur(15px);
+}
+
+.jm-mirror-soft-glow {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 60%;
+  height: 37%;
+  border-radius: 50%;
+  background: #ffffff40;
+  filter: blur(22px);
+}
+
+.jm-mirror-letter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #f5e4b94d;
+  font: 78px Georgia, serif;
+}
+
+.jm-mirror-neck {
+  position: absolute;
+  z-index: 2;
+  top: 286px;
+  left: 50%;
+  width: 44px;
+  height: 42px;
+  transform: translateX(-50%);
+  border: 2px solid #f4d898;
+  border-radius: 7px;
+  background: linear-gradient(
+    90deg,
+    #5d401f,
+    #edcf8e 27%,
+    #9d6d34 65%,
+    #4e3417
+  );
+}
+
+.jm-mirror-handle {
+  position: absolute;
+  z-index: 1;
+  top: 312px;
+  left: 50%;
+  width: 53px;
+  height: 119px;
+  transform: translateX(-50%);
+  border: 3px solid #e8c47f;
+  border-radius: 13px 13px 19px 19px;
+  background: linear-gradient(
+    90deg,
+    #422c16,
+    #b68b4c 17%,
+    #f7dfa4 36%,
+    #ab7b38 65%,
+    #3c2916
+  );
+  box-shadow:
+    inset 2px 0 6px #fff0c27c,
+    7px 8px 14px #0009;
+}
+
+.jm-mirror-handle-detail {
+  position: absolute;
+  inset: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid #69451f;
+  border-radius: 11px;
+  background: #8056284d;
+}
+
+.jm-mirror-handle-detail i {
+  width: 14px;
+  height: 14px;
+  border: 1px solid #e5c281;
+  transform: rotate(45deg);
+}
+
+.jm-mirror-handle-detail i:nth-child(2) {
+  width: 9px;
+  height: 9px;
+}
+
+.jm-mirror-handle-base {
+  position: absolute;
+  top: 422px;
+  left: 50%;
+  width: 59px;
+  height: 13px;
+  transform: translateX(-50%);
+  border-radius: 5px 5px 9px 9px;
+  background: linear-gradient(
+    90deg,
+    #5b3b1a,
+    #f4d995 31%,
+    #a57936 68%,
+    #513316
+  );
+}
+
+.jm-mirror-cover {
+  position: absolute;
+  z-index: 5;
+  top: 28px;
+  left: 50%;
+  width: 236px;
+  height: 272px;
+  transform:
+    translateX(
+      calc(-50% - var(--jm-reveal) * 170px)
+    )
+    translateY(
+      calc(var(--jm-reveal) * -35px)
+    )
+    rotate(
+      calc(var(--jm-reveal) * -18deg)
+    );
+  opacity: calc(1 - var(--jm-reveal));
+  border: 10px solid #bf995e;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 30% 20%,
+    #44403a,
+    #080808 60%,
+    #24211c
+  );
+  box-shadow:
+    inset 0 0 0 3px #e3c181,
+    8px 15px 25px #000a;
+}
+
+.jm-mirror-cover-content {
+  position: absolute;
+  inset: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid #81653d;
+  border-radius: 50%;
+  color: #e2bd7c;
+}
+
+.jm-mirror-cover-content span {
+  font: 27px Georgia, serif;
+  letter-spacing: .18em;
+}
+
+.jm-mirror-cover-content small {
+  font-size: 10px;
+  letter-spacing: .32em;
+}
+
+/* ==================================================
+   SERVICE CARD
+   ================================================== */
+
+.jm-service-card-stage {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  height: min(57vh, 550px);
+  min-height: 310px;
+}
+
+.jm-service-card {
+  position: relative;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 56% 44%;
+  overflow: hidden;
+  border: 1px solid #a8875659;
+  border-radius: 8px;
+  background: #1d1713;
+  box-shadow: 0 28px 75px #000b;
+  animation: jm-card-enter .65s ease both;
+}
+
+.jm-service-card-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  grid-column: 1;
+  grid-row: 1;
+  padding: clamp(20px, 3vw, 48px);
+}
+
+.jm-service-card-number {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 25px;
+  color: #d0af7a;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.jm-service-card-number i {
+  width: 54px;
+  height: 1px;
+  background: #ab8954;
+}
+
+.jm-service-card-eyebrow {
+  margin: 0;
+  color: #d0ad76;
+  font-size: 10px;
+  letter-spacing: .23em;
+}
+
+.jm-service-card h3 {
+  margin: 15px 0 18px;
+  color: #f8eee5;
+  font: 400 clamp(28px, 3.3vw, 52px) / 1.08
+    Georgia, serif;
+  letter-spacing: -.045em;
+}
+
+.jm-service-card-description {
+  max-width: 410px;
+  margin: 0;
+  color: #c4b5a9;
+  font-size: clamp(12px, 1vw, 14px);
+  line-height: 1.8;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
+.jm-service-card-price {
+  margin: 18px 0 0;
+  color: #d6b47d;
+  font-size: 13px;
+}
+
+.jm-service-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 19px;
+  margin-top: 26px;
+  padding: 10px 0;
+  border-bottom: 1px solid #b89561;
+  color: #e8c994;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-decoration: none;
+  transition: gap .25s, color .25s;
+}
+
+.jm-service-card-link:hover {
+  color: #fff0cd;
+  gap: 27px;
+}
+
+.jm-service-card-photo {
+  position: relative;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.jm-service-card-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(.83) contrast(1.04);
+  animation: jm-photo-enter 1.2s ease both;
+}
+
+.jm-service-card-photo-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    #1d17139e,
+    transparent 65%
+  );
+}
+
+.jm-service-card-watermark {
+  position: absolute;
+  z-index: 2;
+  right: 30%;
+  bottom: -36px;
+  color: #d8b57d11;
+  font: 160px Georgia, serif;
+  pointer-events: none;
+}
+
+/* Different card designs */
+
+.jm-card-theme-1 {
+  grid-template-columns: 48% 52%;
+  background: #211b17;
+}
+
+.jm-card-theme-1 .jm-service-card-photo,
+.jm-card-theme-3 .jm-service-card-photo {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.jm-card-theme-1 .jm-service-card-copy,
+.jm-card-theme-3 .jm-service-card-copy {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.jm-card-theme-1 .jm-service-card-photo-shade,
+.jm-card-theme-3 .jm-service-card-photo-shade {
+  background: linear-gradient(
+    270deg,
+    #211b17a8,
+    transparent 65%
+  );
+}
+
+.jm-card-theme-2 {
+  background: linear-gradient(
+    140deg,
+    #30211c,
+    #130f11
+  );
+}
+
+.jm-card-theme-3 {
+  grid-template-columns: 46% 54%;
+  background: #161515;
+}
+
+/* ==================================================
+   NAVIGATION
+   ================================================== */
+
+.jm-service-navigation {
+  position: absolute;
+  bottom: -35px;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #c4a47a;
+  font-size: 11px;
+}
+
+.jm-service-dots {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.jm-service-dots button {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #75624b;
+  cursor: pointer;
+  transition: background .25s, transform .25s;
+}
+
+.jm-service-dots button.active {
+  background: #edc98c;
+  transform: scale(1.5);
+}
+
+.jm-service-dots button:focus-visible,
+.jm-service-card-link:focus-visible {
+  outline: 2px solid #f8daa3;
+  outline-offset: 5px;
+}
+
+.jm-services-progress {
+  position: absolute;
+  z-index: 7;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #44311d;
+}
+
+.jm-services-progress > div {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    #a2783e,
+    #f0d392
+  );
+  transform-origin: left;
+}
+
+.jm-services-scroll-hint {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: #9f805c;
+  font-size: 9px;
+  letter-spacing: .25em;
+  white-space: nowrap;
+}
+
+.jm-services-state {
+  position: absolute;
+  z-index: 3;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #d1af7c;
+  text-align: center;
+  font-size: 15px;
+}
+
+/* ==================================================
+   KEYFRAMES
+   ================================================== */
+
+@keyframes jm-pair-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes jm-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes jm-photo-enter {
+  from {
+    transform: scale(1.13);
+    opacity: .65;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes jm-product-float {
+  0%, 100% {
+    translate: 0 0;
+  }
+
+  50% {
+    translate: 0 -9px;
+  }
+}
+
+@keyframes jm-ambient-pulse {
+  0%, 100% {
+    opacity: .45;
+    transform: scale(.94);
+  }
+
+  50% {
+    opacity: .85;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes jm-particle-float {
+  from {
+    translate: 0 8px;
+    scale: .65;
+  }
+
+  to {
+    translate: 0 -26px;
+    scale: 1.25;
+  }
+}
+
+/* ==================================================
+   TABLET
+   ================================================== */
+
+@media (max-width: 1100px) and (min-width: 701px) {
+  .jm-pair-normal {
+    grid-template-columns:
+      minmax(0, 38%)
+      minmax(0, 62%);
+  }
+
+  .jm-pair-reverse {
+    grid-template-columns:
+      minmax(0, 62%)
+      minmax(0, 38%);
+  }
+
+  .jm-product-visual {
+    transform: scale(.77);
+  }
+
+  .jm-service-card-copy {
+    padding: 23px;
+  }
+
+  .jm-service-card-number {
+    margin-bottom: 15px;
+  }
+
+  .jm-service-card h3 {
+    font-size: clamp(26px, 3.2vw, 40px);
+  }
+}
+
+/* ==================================================
+   MOBILE — PRODUCT AND CARD ALWAYS SIDE BY SIDE
+   ================================================== */
+
+@media (max-width: 700px) {
+  .jovia-services-sticky {
+    height: 100svh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .jovia-services-heading {
+    padding: 86px 12px 8px;
+  }
+
+  .jovia-services-kicker {
+    font-size: 8px;
+    letter-spacing: .13em;
+  }
+
+  .jovia-services-heading h2 {
+    margin: 10px auto 8px;
+    font-size: clamp(24px, 6.2vw, 35px);
+    line-height: 1.13;
+  }
+
+  .jovia-services-subtitle {
+    max-width: 340px;
+    margin-inline: auto;
+    font-size: 10px;
+    line-height: 1.5;
+  }
+
+  /*
+    Do NOT use flex-direction: column.
+
+    The product remains beside the card.
+  */
+
+  .jm-service-pair {
+    display: grid;
+    width: calc(100% - 12px);
+    height: calc(100% - 185px);
+    min-height: 0;
+    margin: 0 auto;
+    gap: 4px;
+    align-items: center;
+  }
+
+  /* 1st, 3rd, 5th card */
+
+  .jm-pair-normal {
+    grid-template-columns:
+      minmax(0, 42%)
+      minmax(0, 58%);
+  }
+
+  .jm-pair-normal .jm-product-stage {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .jm-pair-normal .jm-service-card-stage {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* 2nd, 4th, 6th card */
+
+  .jm-pair-reverse {
+    grid-template-columns:
+      minmax(0, 58%)
+      minmax(0, 42%);
+  }
+
+  .jm-pair-reverse .jm-service-card-stage {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .jm-pair-reverse .jm-product-stage {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  /* Animated product */
+
+  .jm-product-stage {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .jm-product-visual {
+    width: 390px;
+    height: 440px;
+    flex-shrink: 0;
+    transform: scale(.39);
+    transform-origin: center center;
+  }
+
+  .jm-product-ambient {
+    width: 180px;
+    max-width: 95%;
+  }
+
+  .jm-product-orbit {
+    width: 155px;
+    max-width: 95%;
+  }
+
+  .jm-product-caption {
+    display: none;
+  }
+
+  /* Card fills its own column */
+
+  .jm-service-card-stage {
+    width: 100%;
+    min-width: 0;
+    height: min(64svh, 490px);
+    min-height: 320px;
+    margin: 0;
+  }
+
+  /*
+    Mobile service card:
+    Full image background with readable text over it.
+
+    This avoids dividing an already narrow card
+    into two even smaller columns.
+  */
+
+  .jm-service-card,
+  .jm-card-theme-1,
+  .jm-card-theme-3 {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    background: #17110e;
+  }
+
+  .jm-service-card-photo,
+  .jm-card-theme-1 .jm-service-card-photo,
+  .jm-card-theme-3 .jm-service-card-photo {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .jm-service-card-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: .43;
+  }
+
+  .jm-service-card-photo-shade,
+  .jm-card-theme-1 .jm-service-card-photo-shade,
+  .jm-card-theme-3 .jm-service-card-photo-shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(17, 12, 10, .92),
+      rgba(17, 12, 10, .68) 48%,
+      rgba(17, 12, 10, .93)
+    );
+  }
+
+  .jm-service-card-copy,
+  .jm-card-theme-1 .jm-service-card-copy,
+  .jm-card-theme-3 .jm-service-card-copy {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .jm-service-card-number {
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 9px;
+  }
+
+  .jm-service-card-number i {
+    width: 22px;
+  }
+
+  .jm-service-card-eyebrow {
+    font-size: 8px;
+    letter-spacing: .12em;
+  }
+
+  .jm-service-card h3 {
+    margin: 11px 0;
+    font-size: clamp(20px, 5vw, 27px);
+    line-height: 1.11;
+    overflow-wrap: anywhere;
+  }
+
+  .jm-service-card-description {
+    font-size: 10px;
+    line-height: 1.55;
+    -webkit-line-clamp: 5;
+  }
+
+  .jm-service-card-price {
+    margin-top: 12px;
+    font-size: 10px;
+  }
+
+  .jm-service-card-link {
+    gap: 8px;
+    margin-top: 16px;
+    padding: 8px 0;
+    font-size: 9px;
+    letter-spacing: .06em;
+  }
+
+  .jm-service-card-watermark {
+    right: -6px;
+    bottom: -13px;
+    font-size: 78px;
+  }
+
+  /* Navigation stays below the card */
+
+  .jm-service-navigation {
+    bottom: -26px;
+    left: 1px;
+    right: 1px;
+    font-size: 9px;
+  }
+
+  .jm-service-dots {
+    gap: 8px;
+  }
+
+  .jm-service-dots button {
+    width: 7px;
+    height: 7px;
+  }
+
+  .jm-services-scroll-hint {
+    bottom: 10px;
+    font-size: 8px;
+  }
+
+  /* Keep WhatsApp from covering the card */
+
+  .whatsapp-floating {
+    right: 9px;
+    bottom: 34px;
+    max-width: 135px;
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+}
+
+/* ==================================================
+   SMALL PHONES
+   ================================================== */
+
+@media (max-width: 390px) {
+  .jm-product-visual {
+    transform: scale(.34);
+  }
+
+  .jm-service-card-stage {
+    height: min(62svh, 455px);
+    min-height: 285px;
+  }
+
+  .jm-service-card-copy,
+  .jm-card-theme-1 .jm-service-card-copy,
+  .jm-card-theme-3 .jm-service-card-copy {
+    padding: 10px;
+  }
+
+  .jm-service-card h3 {
+    font-size: 20px;
+  }
+
+  .jm-service-card-description {
+    font-size: 9px;
+    -webkit-line-clamp: 4;
+  }
+
+  .jm-service-card-link {
+    margin-top: 11px;
+  }
+}
+
+/* ==================================================
+   SHORT MOBILE SCREENS
+   ================================================== */
+
+@media (max-width: 700px) and (max-height: 680px) {
+  .jovia-services-heading {
+    padding-top: 65px;
+  }
+
+  .jovia-services-heading h2 {
+    font-size: 24px;
+    margin: 7px auto;
+  }
+
+  .jm-service-pair {
+    height: calc(100% - 155px);
+    gap: 3px;
+  }
+
+  .jm-product-visual {
+    transform: scale(.29);
+  }
+
+  .jm-service-card-stage {
+    height: min(69svh, 390px);
+    min-height: 0;
+  }
+
+  .jm-service-card-description {
+    -webkit-line-clamp: 3;
+  }
+
+  .jm-service-card h3 {
+    margin: 7px 0;
+  }
+
+  .jm-service-card-price {
+    margin-top: 7px;
+  }
+
+  .jm-service-card-link {
+    margin-top: 8px;
+  }
+}
+
+/* ==================================================
+   SHORT DESKTOP SCREENS
+   ================================================== */
+
+@media (max-height: 740px) and (min-width: 701px) {
+  .jovia-services-heading {
+    padding-top: 94px;
+  }
+
+  .jovia-services-heading h2 {
+    margin: 10px auto;
+    font-size: clamp(27px, 3.5vw, 47px);
+  }
+
+  .jm-service-pair {
+    height: calc(100% - 225px);
+  }
+
+  .jm-service-card-stage {
+    height: min(57vh, 455px);
+  }
+
+  .jm-product-visual {
+    transform: scale(.78);
+  }
+}
+
+/* ==================================================
+   ACCESSIBILITY
+   ================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .jm-service-pair,
+  .jm-service-card,
+  .jm-service-card-photo img,
+  .jm-product-visual,
+  .jm-product-ambient,
+  .jm-product-particles span {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .jm-product-stage {
+    --jm-reveal: 1 !important;
+    --jm-enter: 1 !important;
+  }
+}
+
+/* === STACKED CARDS (each service follows the previous vertically) === */
+.jovia-services-stacked { padding-bottom: 8vh; }
+.jovia-services-stacked > .jovia-services-heading { padding-top: clamp(100px, 13vh, 140px); }
+.jovia-services-stacked > .jovia-services-bg-glow { position: absolute; }
+.jovia-services-stacked .jm-service-scene {
+  min-height: min(820px, 94svh);
+  height: auto;
+  padding-block: 38px 65px;
+  margin-block: 0;
+}
+.jovia-services-stacked .jm-service-scene .jm-product-stage {
+  height: min(68svh, 610px);
+}
+.jovia-services-stacked .jm-service-scene .jm-service-card-stage {
+  height: min(57svh, 550px);
+}
+.jovia-services-stacked .jm-service-scene + .jm-service-scene {
+  border-top: 1px solid rgba(210, 176, 128, .10);
+}
+@media (max-width: 700px) {
+  .jovia-services-stacked .jm-service-scene {
+    min-height: 82svh;
+    height: auto;
+    padding-block: 24px 54px;
+  }
+  .jovia-services-stacked .jm-service-scene .jm-product-stage {
+    height: min(68svh, 520px);
+    overflow: visible;
+  }
+  .jovia-services-stacked .jm-service-scene .jm-service-card-stage {
+    height: min(64svh, 490px);
+  }
+}
+
+/* === CARD 4: OPENING LUXURY EYESHADOW PALETTE === */
+.jm-eyeshadow { position: absolute; inset: 0; perspective: 1000px; }
+.jm-eyeshadow-shadow { position: absolute; width: 320px; height: 42px; bottom: 60px; left: 50%; transform: translateX(-50%); border-radius: 50%; background: #000; filter: blur(20px); }
+.jm-eyeshadow-product { position: absolute; inset: 0; transform: rotate(-7deg) rotateY(calc((1 - var(--jm-spin)) * -14deg)); transform-style: preserve-3d; }
+.jm-eyeshadow-case { position: absolute; z-index: 3; width: 325px; height: 174px; bottom: 85px; left: 50%; transform: translateX(-50%); border: 8px solid #be995a; border-radius: 13px; background: linear-gradient(130deg,#171011,#302023,#120b0e); box-shadow: 0 13px 0 #6b462a, 0 24px 30px #000b, inset 0 0 0 2px #e5c58b; padding: 10px; }
+.jm-eyeshadow-frame { border: 1px solid #aa7e57; border-radius: 5px; height: 100%; padding: 8px; background: #1a1214; }
+.jm-eyeshadow-shades { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-template-rows: repeat(2, 1fr); gap: 8px; height: 100%; }
+.jm-eyeshadow-pan { position: relative; min-width: 0; border: 2px solid #986d4e; border-radius: 5px; box-shadow: inset 0 0 14px #0004, 1px 2px 4px #0006; }
+.jm-eyeshadow-pan span { position: absolute; bottom: 3px; left: 0; right: 0; color: #fff9; font-size: 5px; text-align: center; letter-spacing: .06em; text-shadow: 0 1px 2px #0008; }
+.jm-eyeshadow-brand { position: absolute; bottom: -6px; left: 0; right: 0; color: #e1c18b; text-align: center; font: 9px Georgia, serif; letter-spacing: .22em; }
+.jm-eyeshadow-clasp { position: absolute; width: 50px; height: 8px; bottom: -17px; left: 50%; transform: translateX(-50%); background: linear-gradient(90deg,#876038,#ffe4ac,#8a633a); border-radius: 0 0 5px 5px; }
+.jm-eyeshadow-lid { position: absolute; z-index: 2; width: 325px; height: 170px; bottom: 242px; left: 50%; transform-origin: 50% 100%; transform: translateX(-50%) translateY(calc((1 - var(--jm-reveal)) * 110px)) rotateX(calc((1 - var(--jm-reveal)) * -76deg)); border: 9px solid #be995a; border-radius: 13px; background: #0c0c0e; box-shadow: inset 0 0 0 2px #ead3a6, 0 9px 25px #0008; overflow: hidden; }
+.jm-eyeshadow-lid-front { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 9px; color: #d7b377; background: linear-gradient(140deg,#20181c,#060608); opacity: calc(1 - var(--jm-reveal)); }
+.jm-eyeshadow-lid-front span { font: 30px Georgia, serif; letter-spacing: .3em; }
+.jm-eyeshadow-lid-front small { font-size: 8px; letter-spacing: .18em; }
+.jm-eyeshadow-lid-inside { position: absolute; inset: 8px; border: 5px solid #6b4b38; border-radius: 5px; background: linear-gradient(125deg,#bfc9c8,#53616c 35%,#26323b 65%,#cdd2cc); opacity: var(--jm-reveal); overflow: hidden; }
+.jm-eyeshadow-lid-inside span { position: absolute; bottom: 9px; left: 0; right: 0; color: #fff9; font: 10px Georgia,serif; text-align: center; letter-spacing: .2em; }
+.jm-eyeshadow-reflection { position: absolute; inset: -40% auto -40% -45%; width: 43%; transform: translateX(calc(var(--jm-reveal) * 320px)) rotate(25deg); background: linear-gradient(90deg,transparent,#fff9,transparent); filter: blur(14px); }

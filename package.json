@@ -1,0 +1,17 @@
+{
+  "name": "cult-contour-fullstack",
+  "private": true,
+  "workspaces": [
+    "apps/web",
+    "apps/api"
+  ],
+  "scripts": {
+    "dev": "concurrently -n web,api -c magenta,cyan \"npm run dev -w @cult/web\" \"npm run dev -w @cult/api\"",
+    "build": "npm run build -w @cult/web && npm run build -w @cult/api",
+    "typecheck": "npm run typecheck -w @cult/web && npm run typecheck -w @cult/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "typescript": "^5.8.3"
+  }
+}

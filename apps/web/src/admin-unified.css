@@ -1,0 +1,47 @@
+/* Cult Contour unified admin navigation and enhanced royal dashboard */
+.cc-admin-unified { display:flex !important; min-height:100dvh; background:#0e1120; color:#f2edf6; }
+.cc-admin-unified > :is(.admin-main,.testimonial-content,.cc-services-content) {flex:1;min-width:0; background:#0e1120;}
+.cc-admin-shared-sidebar { flex:0 0 254px; width:254px; min-height:100dvh; position:sticky;top:0; height:100dvh; z-index:50; overflow-y:auto; display:flex; flex-direction:column; padding:30px 16px 20px; background:linear-gradient(170deg,#16192f 0%,#111526 70%,#171529 100%); border-right:1px solid #393751; color:#f5edfa; }
+.cc-admin-shared-brand {display:flex;align-items:center;gap:10px;padding:10px 10px 34px; font-family:Georgia,serif; font-size:16px;letter-spacing:.17em;color:#efce9d;white-space:nowrap;}
+.cc-admin-brand-mark {color:#d8ad7b;font-size:20px;}
+.cc-admin-shared-brand small {display:block;font:600 9px/1.5 Arial,sans-serif;letter-spacing:.23em;color:#9f9ab8;margin-top:7px;}
+.cc-admin-shared-links {display:flex;flex-direction:column;gap:7px;}
+.cc-admin-shared-link {width:100%;min-height:49px;display:flex;align-items:center;gap:13px;border:1px solid transparent;background:transparent;color:#c8c7dc;text-decoration:none;cursor:pointer;border-radius:10px;padding:0 14px;font:500 13px/1.4 Arial,sans-serif;text-align:left;transition:background .18s,border-color .18s,color .18s;}
+.cc-admin-glyph {width:20px;display:inline-flex;justify-content:center;flex:none;color:#b8a0d4;font-size:19px;}
+.cc-admin-shared-link:hover {background:#292741;border-color:#4d415e;color:#fff;}
+.cc-admin-shared-link.active {color:#ffe4b3;background:linear-gradient(95deg,#463654,#322a49);border-color:#635274;box-shadow:inset 3px 0 #e0bd89; font-weight:700;}
+.cc-admin-shared-link.active .cc-admin-glyph {color:#efd09b;}
+.cc-admin-shared-account {margin-top:auto;padding:24px 10px 3px;border-top:1px solid #383751;display:flex;flex-direction:column;gap:8px;}
+.cc-admin-account-label {font-size:9px;letter-spacing:.18em;color:#9290ac;}
+.cc-admin-account-email {font-size:12px;color:#ded6e4;overflow-wrap:anywhere;}
+.cc-admin-shared-signout {display:flex;align-items:center;gap:10px;align-self:flex-start;border:0;background:none;padding:9px 0;color:#e6c79d;cursor:pointer;font:600 12px Arial,sans-serif;}
+.cc-admin-mobile-bar,.cc-admin-overlay {display:none;}
+/* Consistent royal typography, cards and controls */
+.cc-admin-unified :is(.admin-topbar h1,.testimonial-header h1,.cc-services-header h1){letter-spacing:-.025em;}
+.cc-admin-unified :is(.admin-stat-card,.testimonial-stats article,.cc-services-stats article){background:linear-gradient(150deg,#20253c,#191d31);border:1px solid #3b435f;border-radius:14px;box-shadow:0 9px 23px #05091922;}
+.cc-admin-unified :is(.admin-panel,.testimonial-panel,.cc-services-panel){background:#1a1e32;border:1px solid #3b415c;border-radius:15px;box-shadow:0 14px 35px #03071124;overflow:hidden;}
+.cc-admin-unified :is(input,select,textarea){border-radius:9px;}
+.cc-admin-unified :is(button,a,input,select,textarea):focus-visible{outline:2px solid #e1bd91;outline-offset:2px;}
+.cc-admin-unified :is(.admin-table,.testimonial-table,.cc-services-table) tbody tr:hover{background:#272b42;}
+.cc-admin-unified :is(.admin-main,.testimonial-content,.cc-services-content){padding-top:38px;}
+#inquiries {scroll-margin-top:95px;}
+@media (max-width: 750px){
+ .cc-admin-unified {display:block !important;padding-top:64px;overflow-x:clip;}
+ .cc-admin-mobile-bar {display:flex;align-items:center;justify-content:space-between;position:fixed;inset:0 0 auto;height:64px;z-index:110;padding:0 16px;background:#171a2e;border-bottom:1px solid #3c3b56;}
+ .cc-admin-mobile-brand {font:500 13px Georgia,serif;letter-spacing:.16em;color:#efce9d;}
+ .cc-admin-mobile-brand small {display:block;font:600 9px Arial,sans-serif;letter-spacing:.18em;color:#a9a4bf;margin-top:5px;}
+ .cc-admin-hamburger {display:flex;align-items:center;justify-content:center;width:44px;height:42px;flex:none;border:1px solid #665b79;border-radius:11px;color:#f0d5a8;background:#292641;cursor:pointer;}
+ .cc-admin-overlay {display:block;position:fixed;inset:64px 0 0;z-index:108;background:#02040caa;border:0;width:100%;}
+ .cc-admin-shared-sidebar {position:fixed;z-index:109;top:64px;left:0;width:min(310px,85vw);height:calc(100dvh - 64px);min-height:0;transform:translateX(-105%);transition:transform .22s ease;padding:22px 15px;box-shadow:18px 0 42px #05071560;}
+ .cc-admin-shared-sidebar.is-open {transform:translateX(0);}
+ .cc-admin-shared-brand {padding-bottom:23px;}
+ .cc-admin-unified > :is(.admin-main,.testimonial-content,.cc-services-content){width:100%;min-width:0;margin-left:0 !important;padding:22px 14px 40px !important;}
+ .cc-admin-unified .admin-stats {grid-template-columns:repeat(2,minmax(0,1fr));}
+ .cc-admin-unified :is(.testimonial-header,.cc-services-header,.admin-topbar){flex-wrap:wrap;gap:15px;}
+ .cc-admin-unified :is(.testimonial-header h1,.cc-services-header h1,.admin-topbar h1){font-size:clamp(26px,6vw,35px);line-height:1.15;}
+ .cc-admin-unified :is(.testimonial-table-wrap,.cc-services-table-wrap){overflow-x:auto;max-width:100%;}
+ .cc-admin-unified :is(.testimonial-filters,.cc-services-filters){flex-wrap:wrap;}
+ .cc-admin-unified :is(.testimonial-filters input,.cc-services-filters input){min-width:0;max-width:100%;}
+ .cc-admin-unified :is(.admin-panel,.testimonial-panel,.cc-services-panel){border-radius:13px;}
+}
+@media (prefers-reduced-motion:reduce){.cc-admin-shared-sidebar,.cc-admin-shared-link{transition:none;}}

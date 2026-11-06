@@ -1,0 +1,87 @@
+
+/*
+  Cult Contour
+  Service Image Upload Styles
+
+  Additional styles for Services Management.
+  Existing services-admin.css remains unchanged.
+*/
+
+.cc-upload-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cc-upload-field > label {
+  color: #302038;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cc-hidden-file {
+  display: none !important;
+}
+
+.cc-upload-zone {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 145px;
+  padding: 16px;
+  border: 1px dashed #d19bb8;
+  border-radius: 10px;
+  background: #fff9fc;
+}
+
+.cc-upload-preview {
+  width: 150px;
+  height: 112px;
+  flex: 0 0 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #eeeeee;
+}
+
+.cc-upload-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  min-width: 0;
+}
+
+.cc-upload-copy small {
+  color: #867584;
+  font-size: 12px;
+}
+
+.cc-file-name {
+  max-width: 100%;
+  word-break: break-word;
+  color: #b52e72;
+  font-size: 12px;
+}
+
+.cc-modal-error {
+  margin: 0 30px 12px;
+  padding: 10px 12px;
+  border: 1px solid #ffccd1;
+  border-radius: 8px;
+  background: #fff3f4;
+  color: #a71930;
+  font-size: 12px;
+}
+
+@media (max-width: 580px) {
+  .cc-upload-zone {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .cc-upload-preview {
+    width: 100%;
+    height: 165px;
+    flex-basis: auto;
+  }
+}
