@@ -10,6 +10,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: jovia-vercel-sync
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -21,30 +25,16 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
-      - name: Verify destination access
+      - name: Sync original files to Vercel repository
         env:
           SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
         run: |
-          set -e
+          set -euo pipefail
 
           if [ -z "$SYNC_TOKEN" ]; then
             echo "ERROR: AUTO_SYNC_JOVIA secret is missing"
             exit 1
           fi
-
-          AUTH=$(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w 0)
-
-          git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
-            ls-remote https://github.com/PoorvashaV/jovia.git HEAD \
-            >/dev/null
-
-          echo "Destination access verified"
-
-      - name: Establish common repository history and sync
-        env:
-          SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
-        run: |
-          set -e
 
           AUTH=$(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w 0)
 
@@ -55,18 +45,25 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if ! git merge-base HEAD vercel/main >/dev/null; then
-            echo "Unrelated histories detected"
+          git checkout -B deployment-sync vercel/main
 
-            git merge -s ours \
-              --allow-unrelated-histories \
-              --no-edit \
-              vercel/main
-          else
-            echo "Common history already exists"
+          git rm -r --quiet --ignore-unmatch .
+
+          git clean -fd
+
+          git checkout "$GITHUB_SHA" -- .
+
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo "No file changes to sync"
+            exit 0
           fi
 
-          git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
-            push https://github.com/PoorvashaV/jovia.git HEAD:main
+          git commit -m "Sync source from ${GITHUB_SHA}"
 
-          echo "Synchronization completed"
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
+            push https://github.com/PoorvashaV/jovia.git \
+            HEAD:main
+
+          echo "Vercel repository synchronized successfully"
