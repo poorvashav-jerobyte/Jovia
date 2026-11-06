@@ -20,6 +20,27 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Verify token and destination access
+        env:
+          SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
+        run: |
+          if [ -z "$SYNC_TOKEN" ]; then
+            echo "ERROR: AUTO_SYNC_JOVIA secret is missing or empty"
+            exit 1
+          fi
+
+          echo "Token is available"
+
+          git -c credential.helper= \
+            ls-remote \
+            "https://x-access-token:${SYNC_TOKEN}@github.com/PoorvashaV/jovia.git" \
+            HEAD >/dev/null || {
+              echo "ERROR: Cannot access destination repository"
+              exit 1
+            }
+
+          echo "Destination repository access verified"
+
       - name: Push changes to Vercel repository
         env:
           SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
@@ -27,4 +48,4 @@ jobs:
           git remote add vercel \
             "https://x-access-token:${SYNC_TOKEN}@github.com/PoorvashaV/jovia.git"
 
-          git push vercel HEAD:main
+          git -c credential.helper= push vercel HEAD:main
