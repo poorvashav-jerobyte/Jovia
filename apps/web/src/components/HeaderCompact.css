@@ -1,0 +1,149 @@
+
+/* ==========================================
+   JOVIA MUA - COMPACT GLASS HEADER
+   ========================================== */
+
+html body .site-header.jovia-compact-glass {
+  height: 56px !important;
+  min-height: 56px !important;
+  max-height: 56px !important;
+
+  padding: 0 22px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+
+  background: rgba(20, 13, 22, 0.38) !important;
+
+  -webkit-backdrop-filter: blur(18px) saturate(155%) !important;
+  backdrop-filter: blur(18px) saturate(155%) !important;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 3px 18px rgba(0, 0, 0, 0.12) !important;
+
+  z-index: 1000 !important;
+}
+
+/* Company name */
+
+.site-header.jovia-compact-glass .jovia-glass-logo {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1.2px !important;
+  line-height: 1.2 !important;
+
+  white-space: nowrap;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* Desktop navigation */
+
+.jovia-compact-glass .desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.jovia-compact-glass .desktop-nav a {
+  font-size: 12px;
+}
+
+/* Compact hamburger menu */
+
+.site-header.jovia-compact-glass .jovia-glass-menu {
+  width: 36px !important;
+  height: 36px !important;
+
+  min-width: 36px !important;
+  min-height: 36px !important;
+  max-width: 36px !important;
+  max-height: 36px !important;
+
+  padding: 0 !important;
+  margin: 0 !important;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  border-radius: 50% !important;
+  background: rgba(255, 255, 255, 0.045) !important;
+  border: 1px solid rgba(206, 170, 137, 0.55) !important;
+
+  box-sizing: border-box !important;
+  cursor: pointer;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.jovia-compact-glass .jovia-glass-menu:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(206, 170, 137, 0.85) !important;
+}
+
+/* Hamburger icon lines */
+
+.site-header.jovia-compact-glass .jovia-glass-menu span {
+  display: block !important;
+
+  width: 15px !important;
+  height: 1px !important;
+  min-height: 1px !important;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  background: #fff2f7 !important;
+
+  transform: none !important;
+  position: static !important;
+}
+
+/* ==========================================
+   MOBILE HEADER
+   ========================================== */
+
+@media (max-width: 768px) {
+  html body .site-header.jovia-compact-glass {
+    height: 48px !important;
+    min-height: 48px !important;
+    max-height: 48px !important;
+
+    padding: 0 16px !important;
+  }
+
+  .site-header.jovia-compact-glass .jovia-glass-logo {
+    font-size: 12px !important;
+    letter-spacing: 1px !important;
+  }
+
+  .site-header.jovia-compact-glass .jovia-glass-menu {
+    width: 32px !important;
+    height: 32px !important;
+
+    min-width: 32px !important;
+    min-height: 32px !important;
+    max-width: 32px !important;
+    max-height: 32px !important;
+  }
+
+  .site-header.jovia-compact-glass .jovia-glass-menu span {
+    width: 13px !important;
+  }
+}
+
+/* Very small mobile screens */
+
+@media (max-width: 380px) {
+  html body .site-header.jovia-compact-glass {
+    padding: 0 12px !important;
+  }
+}
