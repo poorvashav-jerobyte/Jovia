@@ -22,7 +22,7 @@ jobs:
 
       - name: Push changes to Vercel repository
         env:
-          SYNC_TOKEN: ${{ secrets.JOVIA_SYNC_TOKEN }}
+          SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
         run: |
           git remote add vercel \
             "https://x-access-token:${SYNC_TOKEN}@github.com/PoorvashaV/jovia.git"
