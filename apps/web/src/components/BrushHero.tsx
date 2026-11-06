@@ -20,6 +20,10 @@ export default function BrushHero() {
 
     if (!section || !canvas) return;
 
+    // Preserve non-null DOM references inside nested animation callbacks.
+    const safeSection: HTMLElement = section;
+    const safeCanvas: HTMLCanvasElement = canvas;
+
     const context = canvas.getContext("2d", {
       alpha: false,
     });
@@ -56,8 +60,8 @@ export default function BrushHero() {
         return false;
       }
 
-      const width = canvas.clientWidth;
-      const height = canvas.clientHeight;
+      const width = safeCanvas.clientWidth;
+      const height = safeCanvas.clientHeight;
 
       if (!width || !height) return false;
 
@@ -77,11 +81,11 @@ export default function BrushHero() {
       );
 
       if (
-        canvas.width !== pixelWidth ||
-        canvas.height !== pixelHeight
+        safeCanvas.width !== pixelWidth ||
+        safeCanvas.height !== pixelHeight
       ) {
-        canvas.width = pixelWidth;
-        canvas.height = pixelHeight;
+        safeCanvas.width = pixelWidth;
+        safeCanvas.height = pixelHeight;
 
         lastDrawnFrame = -1;
       }
@@ -189,11 +193,11 @@ export default function BrushHero() {
 
       if (!mounted) return;
 
-      const rect = section.getBoundingClientRect();
+      const rect = safeSection.getBoundingClientRect();
 
       const scrollDistance = Math.max(
         1,
-        section.offsetHeight - window.innerHeight
+        safeSection.offsetHeight - window.innerHeight
       );
 
       const rawProgress = Math.max(
@@ -214,7 +218,7 @@ export default function BrushHero() {
       // Frame URL mapping remains reversed (120 down to 001).
       currentFrame = calculatedFrame;
 
-      section.style.setProperty(
+      safeSection.style.setProperty(
         "--hero-progress",
         String(rawProgress)
       );
