@@ -1,0 +1,447 @@
+
+/* ============================================
+   JOVIA MUA
+   FLOATING GLASS SOCIAL BUTTONS
+   ============================================ */
+
+/* ============================================
+   STANDARD SECTION - INLINE ARROW
+   ============================================ */
+
+.standard--editorial .standard-bottom {
+  display: block;
+}
+
+.standard--editorial .jovia-standard-note {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  width: 100%;
+}
+
+.standard--editorial .jovia-note-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 32px;
+  height: 32px;
+  margin-left: 2px;
+
+  border: 1px solid rgba(202, 151, 126, 0.65);
+  border-radius: 50%;
+
+  color: #f1d6d4;
+  font: normal 19px/1 Arial, sans-serif;
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.standard--editorial .jovia-note-arrow:hover {
+  background: rgba(202, 151, 126, 0.18);
+  transform: translate(2px, -2px);
+}
+
+/* ============================================
+   FLOATING SOCIAL CONTAINER
+   ============================================ */
+
+html body .jovia-fixed-socials {
+  position: fixed;
+
+  right: 18px;
+
+  bottom: calc(
+    20px + env(safe-area-inset-bottom, 0px)
+  );
+
+  z-index: 1000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 11px;
+
+  width: max-content;
+  max-width: calc(100vw - 24px);
+
+  padding: 0;
+  margin: 0;
+
+  pointer-events: none;
+}
+
+/* ============================================
+   COMMON GLASS BUTTON
+   ============================================ */
+
+html body .jovia-fixed-socials a {
+  position: relative;
+  isolation: isolate;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  min-height: 46px;
+  width: auto;
+
+  padding: 11px 17px;
+  margin: 0;
+
+  box-sizing: border-box;
+  border-radius: 100px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.14),
+      rgba(255, 255, 255, 0.035)
+    );
+
+  border:
+    1px solid rgba(255, 255, 255, 0.26);
+
+  color: #ffffff;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.3px;
+
+  text-decoration: none;
+  white-space: nowrap;
+
+  -webkit-backdrop-filter:
+    blur(18px) saturate(170%);
+
+  backdrop-filter:
+    blur(18px) saturate(170%);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.17),
+    0 7px 22px rgba(0, 0, 0, 0.28);
+
+  cursor: pointer;
+  pointer-events: auto;
+
+  transition:
+    transform 0.28s ease,
+    background 0.28s ease,
+    border-color 0.28s ease,
+    box-shadow 0.28s ease;
+
+  animation:
+    joviaGlassAppear 0.55s
+    cubic-bezier(0.2, 0.85, 0.25, 1)
+    both;
+}
+
+/* GLASS REFLECTION */
+
+html body .jovia-fixed-socials a::before {
+  content: "";
+
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.015) 48%,
+      transparent 85%
+    );
+
+  pointer-events: none;
+}
+
+/* ============================================
+   INSTAGRAM GLASS BUTTON
+   ============================================ */
+
+html body
+.jovia-fixed-socials
+.jovia-instagram-link {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(172, 56, 121, 0.7),
+      rgba(89, 33, 91, 0.64)
+    );
+
+  border-color:
+    rgba(245, 163, 210, 0.5);
+
+  color: #fff3fa;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 7px 25px rgba(90, 25, 74, 0.35);
+
+  animation-delay: 0.08s;
+}
+
+html body
+.jovia-fixed-socials
+.jovia-instagram-link:hover {
+  transform:
+    translateY(-3px) scale(1.045);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(197, 67, 143, 0.82),
+      rgba(110, 35, 105, 0.76)
+    );
+
+  border-color:
+    rgba(255, 200, 227, 0.8);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    0 9px 29px rgba(153, 44, 110, 0.48);
+}
+
+/* ============================================
+   WHATSAPP GLASS BUTTON
+   ============================================ */
+
+html body
+.jovia-fixed-socials
+.jovia-whatsapp-link {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(22, 130, 89, 0.78),
+      rgba(10, 76, 58, 0.72)
+    );
+
+  border-color:
+    rgba(132, 227, 172, 0.5);
+
+  color: #f0fff5;
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 7px 25px rgba(0, 62, 43, 0.36);
+
+  animation-delay: 0.18s;
+}
+
+html body
+.jovia-fixed-socials
+.jovia-whatsapp-link:hover {
+  transform:
+    translateY(-3px) scale(1.045);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(30, 158, 107, 0.88),
+      rgba(15, 99, 72, 0.82)
+    );
+
+  border-color:
+    rgba(179, 255, 207, 0.85);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 10px 30px rgba(0, 98, 62, 0.44);
+}
+
+/* ============================================
+   SOCIAL ICON ALIGNMENT
+   ============================================ */
+
+html body .jovia-social-icon,
+html body .jovia-whatsapp-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 24px;
+  height: 24px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255, 255, 255, 0.12);
+
+  color: #ffffff;
+}
+
+html body .jovia-whatsapp-mark {
+  background:
+    rgba(255, 255, 255, 0.14);
+}
+
+html body .jovia-social-icon svg,
+html body .jovia-whatsapp-mark svg {
+  display: block;
+
+  width: 18px;
+  height: 18px;
+
+  flex-shrink: 0;
+}
+
+html body .jovia-whatsapp-mark svg {
+  fill: currentColor;
+}
+
+html body .jovia-social-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* ============================================
+   FOOTER WHATSAPP ICON
+   ============================================ */
+
+.jovia-luxury-footer
+.jovia-footer-whatsapp-button
+svg:first-child {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  fill: currentColor;
+}
+
+/* ============================================
+   APPEAR ANIMATION
+   ============================================ */
+
+@keyframes joviaGlassAppear {
+  from {
+    opacity: 0;
+    transform:
+      translateY(16px) scale(0.93);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0) scale(1);
+  }
+}
+
+/* ============================================
+   FOCUS
+   ============================================ */
+
+.standard--editorial
+.jovia-note-arrow:focus-visible,
+html body .jovia-fixed-socials a:focus-visible {
+  outline: 2px solid #f2c2d4;
+  outline-offset: 4px;
+}
+
+/* ============================================
+   MOBILE RESPONSIVE
+   ============================================ */
+
+@media (max-width: 750px) {
+  .standard--editorial .jovia-standard-note {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 14px;
+  }
+
+  .standard--editorial .jovia-note-arrow {
+    width: 30px;
+    height: 30px;
+  }
+
+  html body .jovia-fixed-socials {
+    right: 12px;
+
+    bottom: calc(
+      14px + env(safe-area-inset-bottom, 0px)
+    );
+
+    gap: 9px;
+  }
+
+  html body .jovia-fixed-socials a {
+    min-height: 42px;
+
+    padding: 10px 14px;
+
+    font-size: 10px;
+    border-radius: 30px;
+
+    -webkit-backdrop-filter:
+      blur(16px) saturate(150%);
+
+    backdrop-filter:
+      blur(16px) saturate(150%);
+  }
+
+  html body .jovia-social-icon,
+  html body .jovia-whatsapp-mark {
+    width: 21px;
+    height: 21px;
+  }
+
+  html body .jovia-social-icon svg,
+  html body .jovia-whatsapp-mark svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* ============================================
+   SMALL MOBILE
+   ============================================ */
+
+@media (max-width: 380px) {
+  html body .jovia-fixed-socials {
+    right: 9px;
+    gap: 8px;
+  }
+
+  html body .jovia-fixed-socials a {
+    min-height: 39px;
+    padding: 9px 11px;
+
+    font-size: 9px;
+    gap: 6px;
+  }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  html body .jovia-fixed-socials a {
+    animation: none;
+    transition: none;
+  }
+
+  html body .jovia-fixed-socials a:hover {
+    transform: none;
+  }
+}

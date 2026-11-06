@@ -12,6 +12,10 @@ import AdminPage from "./pages/AdminPage";
 import ServicesPage from "./pages/ServicesPage";
 import TestimonialsPage from "./pages/TestimonialsPage";
 import CompanyDetailsPage from "./pages/CompanyDetailsPage";
+import ArtistAdminPage from "./pages/ArtistAdminPage";
+import UserAccessPage from "./pages/UserAccessPage";
+import { AdminAccessGate } from "./AdminAccess";
+import "./user-access.css";
 
 import "./original.css";
 import "./styles.css";
@@ -19,8 +23,16 @@ import "./admin.css";
 import "./company-details.css";
 import "./services-admin.css";
 
-function Root() {
+function AdminRoot() {
   const { pathname } = useLocation();
+
+  if (pathname === "/admin/user-access" || pathname === "/admin/user-access/") {
+    return <UserAccessPage />;
+  }
+
+  if (pathname === "/admin/artist" || pathname === "/admin/artist/") {
+    return <ArtistAdminPage />;
+  }
 
   if (
     pathname === "/admin/company-details" || pathname === "/admin/company-details/"
@@ -49,6 +61,14 @@ function Root() {
     return <AdminPage />;
   }
 
+  return <App />;
+}
+
+function Root() {
+  const { pathname } = useLocation();
+  if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+    return <AdminAccessGate><AdminRoot /></AdminAccessGate>;
+  }
   return <App />;
 }
 

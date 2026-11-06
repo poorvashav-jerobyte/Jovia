@@ -1,0 +1,653 @@
+
+/* =========================================
+   JOVIA MUA - LUXURY FOOTER
+   ========================================= */
+
+html body .jovia-luxury-footer {
+  position: relative;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  margin: 0;
+  padding: 0;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(112, 38, 76, 0.2),
+      transparent 55%
+    ),
+    linear-gradient(
+      180deg,
+      #1c121a 0%,
+      #100d13 100%
+    );
+
+  color: #f8edf2;
+  font-family: inherit;
+}
+
+/* TOP DECORATIVE LINE */
+
+.jovia-luxury-footer .jovia-footer-topline {
+  width: 100%;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #bb7a93,
+    #d9b18e,
+    #bb7a93,
+    transparent
+  );
+}
+
+/* =========================================
+   INTRODUCTION SECTION
+   ========================================= */
+
+.jovia-luxury-footer .jovia-footer-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  padding: 72px 24px 58px;
+  box-sizing: border-box;
+}
+
+.jovia-footer-decor {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.jovia-footer-decor-line {
+  width: 45px;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #be9c7b
+  );
+}
+
+.jovia-footer-decor-line:last-child {
+  transform: rotate(180deg);
+}
+
+.jovia-footer-decor-star {
+  color: #d6a97e;
+  font-size: 19px;
+}
+
+.jovia-luxury-footer .jovia-footer-kicker {
+  margin: 0 0 13px;
+  padding: 0;
+
+  color: #d7aa83;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  line-height: 1.6;
+}
+
+.jovia-luxury-footer .jovia-footer-brand {
+  margin: 0 0 18px;
+  padding: 0;
+
+  color: #fff3f5;
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(36px, 5vw, 62px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  text-align: center;
+}
+
+.jovia-luxury-footer .jovia-footer-intro-text {
+  max-width: 490px;
+  margin: 0;
+  padding: 0;
+
+  color: #cbbdc4;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.95;
+  text-align: center;
+}
+
+/* MAIN CONSULTATION BUTTON */
+
+.jovia-luxury-footer .jovia-footer-main-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+
+  min-height: 52px;
+  box-sizing: border-box;
+
+  margin-top: 30px;
+  padding: 6px 7px 6px 24px;
+
+  border: 1px solid rgba(210, 166, 145, 0.65);
+  border-radius: 40px;
+
+  background: rgba(255, 255, 255, 0.025);
+  color: #fff4f6;
+
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 1.5px;
+  text-decoration: none;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.jovia-luxury-footer .jovia-footer-main-cta:hover {
+  background: rgba(178, 105, 139, 0.17);
+  border-color: #e1b58f;
+  transform: translateY(-2px);
+}
+
+.jovia-footer-cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+
+  border-radius: 50%;
+  background: #b985a3;
+  color: #fff;
+}
+
+/* =========================================
+   FOOTER COLUMNS
+   ========================================= */
+
+.jovia-luxury-footer .jovia-footer-columns {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1.2fr);
+
+  gap: 50px;
+
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 45px 40px 66px;
+
+  box-sizing: border-box;
+
+  border-top:
+    1px solid rgba(215, 177, 160, 0.16);
+}
+
+.jovia-luxury-footer .jovia-footer-column {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  min-width: 0;
+}
+
+.jovia-luxury-footer .jovia-footer-heading {
+  position: relative;
+
+  margin: 0 0 28px;
+  padding: 0 0 14px;
+
+  color: #fff0f3;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.jovia-luxury-footer .jovia-footer-heading::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 33px;
+  height: 1px;
+
+  background: #c59b7a;
+}
+
+/* LINK LIST */
+
+.jovia-luxury-footer .jovia-footer-link-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+
+  width: 100%;
+}
+
+.jovia-luxury-footer .jovia-footer-text-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 9px 0;
+  margin: 0;
+
+  color: #bfb1ba;
+
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+  text-align: left;
+  text-decoration: none;
+
+  border: 0;
+  background: transparent;
+
+  transition:
+    color 0.2s ease,
+    padding-left 0.2s ease;
+}
+
+.jovia-footer-text-link > span {
+  min-width: 0;
+}
+
+.jovia-luxury-footer .jovia-footer-text-link svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+
+  opacity: 0;
+  transform: translateX(-5px);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.jovia-luxury-footer .jovia-footer-text-link:hover {
+  color: #e4b2c6;
+  padding-left: 5px;
+}
+
+.jovia-luxury-footer
+.jovia-footer-text-link:hover svg {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* =========================================
+   CONTACT SECTION
+   ========================================= */
+
+.jovia-luxury-footer
+.jovia-footer-contact-description {
+  margin: 0 0 22px;
+  padding: 0;
+
+  color: #bfb1ba;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.jovia-luxury-footer
+.jovia-footer-contact-button,
+.jovia-luxury-footer
+.jovia-footer-whatsapp-button,
+.jovia-luxury-footer
+.jovia-footer-instagram-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  width: 100%;
+  min-height: 49px;
+  box-sizing: border-box;
+
+  margin: 0 0 11px;
+  padding: 12px 16px;
+
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 11px;
+
+  color: #f7edf2;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.3;
+  text-align: left;
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.jovia-footer-contact-button svg,
+.jovia-footer-whatsapp-button svg,
+.jovia-footer-instagram-button svg {
+  flex-shrink: 0;
+}
+
+.jovia-luxury-footer
+.jovia-footer-contact-button {
+  background: rgba(164, 117, 155, 0.15);
+  border-color: rgba(202, 159, 187, 0.4);
+}
+
+.jovia-luxury-footer
+.jovia-footer-whatsapp-button {
+  background: rgba(37, 145, 91, 0.13);
+  border-color: rgba(78, 166, 119, 0.32);
+}
+
+.jovia-luxury-footer
+.jovia-footer-instagram-button {
+  background: rgba(188, 65, 119, 0.12);
+  border-color: rgba(205, 110, 151, 0.32);
+}
+
+.jovia-luxury-footer
+.jovia-footer-contact-button:hover,
+.jovia-luxury-footer
+.jovia-footer-whatsapp-button:hover,
+.jovia-luxury-footer
+.jovia-footer-instagram-button:hover {
+  transform: translateY(-2px);
+  background: rgba(190, 119, 156, 0.22);
+  border-color: rgba(226, 172, 193, 0.65);
+}
+
+/* =========================================
+   DECORATIVE DIVIDER
+   ========================================= */
+
+.jovia-footer-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.jovia-footer-divider > span:first-child,
+.jovia-footer-divider > span:last-child {
+  flex: 1;
+  height: 1px;
+
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(214, 171, 155, 0.23)
+  );
+}
+
+.jovia-footer-divider > span:last-child {
+  transform: rotate(180deg);
+}
+
+.jovia-footer-divider-icon {
+  color: #be917d;
+  font-size: 14px;
+}
+
+/* =========================================
+   BOTTOM COPYRIGHT
+   ========================================= */
+
+.jovia-luxury-footer .jovia-footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 25px 40px 35px;
+
+  box-sizing: border-box;
+}
+
+.jovia-luxury-footer .jovia-footer-bottom p {
+  margin: 0;
+  padding: 0;
+
+  color: #a99aa4;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.jovia-luxury-footer
+.jovia-footer-bottom-tagline {
+  font-size: 9px !important;
+  letter-spacing: 1.8px;
+  color: #b99585 !important;
+}
+
+.jovia-luxury-footer .jovia-footer-back-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  color: #dac2cc;
+  font-size: 11px;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.jovia-footer-back-top span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 27px;
+  height: 27px;
+
+  border: 1px solid rgba(220, 185, 174, 0.3);
+  border-radius: 50%;
+  font-size: 15px;
+}
+
+/* =========================================
+   TABLET
+   ========================================= */
+
+@media (max-width: 900px) {
+  .jovia-luxury-footer .jovia-footer-columns {
+    gap: 30px;
+    padding: 40px 25px 55px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-bottom {
+    padding: 25px 25px 45px;
+  }
+}
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media (max-width: 650px) {
+  html body .jovia-luxury-footer {
+    padding-bottom: 100px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-intro {
+    padding: 50px 22px 45px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-brand {
+    font-size: 40px;
+    letter-spacing: -0.5px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-intro-text {
+    font-size: 13px;
+    line-height: 1.85;
+  }
+
+  .jovia-luxury-footer .jovia-footer-main-cta {
+    width: 100%;
+    max-width: 310px;
+    justify-content: space-between;
+  }
+
+  /* Two-column links, full-width contact */
+
+  .jovia-luxury-footer .jovia-footer-columns {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 22px;
+    row-gap: 38px;
+
+    padding: 32px 20px 45px;
+  }
+
+  .jovia-luxury-footer
+  .jovia-footer-column {
+    min-width: 0;
+  }
+
+  .jovia-luxury-footer .jovia-footer-heading {
+    font-size: 20px;
+    margin-bottom: 17px;
+    padding-bottom: 12px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-link-list {
+    gap: 3px;
+  }
+
+  .jovia-luxury-footer
+  .jovia-footer-text-link {
+    font-size: 12px;
+    line-height: 1.6;
+    padding: 9px 0;
+    overflow-wrap: anywhere;
+  }
+
+  .jovia-luxury-footer
+  .jovia-footer-text-link svg {
+    display: none;
+  }
+
+  .jovia-luxury-footer
+  .jovia-footer-contact {
+    grid-column: 1 / -1;
+  }
+
+  .jovia-luxury-footer
+  .jovia-footer-contact-description {
+    max-width: 340px;
+  }
+
+  .jovia-luxury-footer
+  .jovia-footer-contact-button,
+  .jovia-luxury-footer
+  .jovia-footer-whatsapp-button,
+  .jovia-luxury-footer
+  .jovia-footer-instagram-button {
+    min-height: 51px;
+    font-size: 12px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-bottom {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    gap: 13px;
+    padding: 26px 20px 28px;
+    text-align: center;
+  }
+
+  .jovia-luxury-footer .jovia-footer-bottom p {
+    text-align: center;
+  }
+
+  .jovia-footer-divider {
+    padding: 0 20px;
+  }
+
+  /* Smaller floating social buttons */
+
+  html body .jovia-fixed-socials {
+    right: 12px;
+    bottom: calc(
+      14px + env(safe-area-inset-bottom, 0px)
+    );
+    gap: 7px;
+  }
+
+  html body .jovia-fixed-socials a {
+    min-height: 38px;
+    padding: 9px 12px;
+    font-size: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* =========================================
+   EXTRA SMALL SCREENS
+   ========================================= */
+
+@media (max-width: 360px) {
+  .jovia-luxury-footer .jovia-footer-columns {
+    column-gap: 14px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-heading {
+    font-size: 18px;
+  }
+
+  .jovia-luxury-footer .jovia-footer-brand {
+    font-size: 35px;
+  }
+}
+
+/* =========================================
+   ACCESSIBILITY
+   ========================================= */
+
+.jovia-luxury-footer a:focus-visible {
+  outline: 2px solid #e2b6c7;
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jovia-luxury-footer a,
+  .jovia-luxury-footer svg {
+    transition: none !important;
+  }
+}

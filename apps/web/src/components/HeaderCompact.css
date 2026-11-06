@@ -10,24 +10,32 @@ html body .site-header.jovia-compact-glass {
 
   padding: 0 22px !important;
   margin: 0 !important;
+
   box-sizing: border-box !important;
 
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
+  gap: 18px;
 
-  background: rgba(20, 13, 22, 0.38) !important;
+  background: rgba(20, 13, 22, 0.48) !important;
 
-  -webkit-backdrop-filter: blur(18px) saturate(155%) !important;
-  backdrop-filter: blur(18px) saturate(155%) !important;
+  -webkit-backdrop-filter:
+    blur(18px) saturate(155%) !important;
 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
-  box-shadow: 0 3px 18px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter:
+    blur(18px) saturate(155%) !important;
 
-  z-index: 1000 !important;
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.12) !important;
+
+  box-shadow:
+    0 3px 18px rgba(0, 0, 0, 0.12) !important;
+
+  z-index: 1100 !important;
 }
 
-/* Company name */
+/* Logo */
 
 .site-header.jovia-compact-glass .jovia-glass-logo {
   font-size: 13px !important;
@@ -36,114 +44,347 @@ html body .site-header.jovia-compact-glass {
   line-height: 1.2 !important;
 
   white-space: nowrap;
+  flex-shrink: 0;
+
   padding: 0 !important;
   margin: 0 !important;
 }
 
 /* Desktop navigation */
 
-.jovia-compact-glass .desktop-nav {
-  display: flex;
-  align-items: center;
-  gap: 22px;
-}
-
-.jovia-compact-glass .desktop-nav a {
-  font-size: 12px;
-}
-
-/* Compact hamburger menu */
-
-.site-header.jovia-compact-glass .jovia-glass-menu {
-  width: 36px !important;
-  height: 36px !important;
-
-  min-width: 36px !important;
-  min-height: 36px !important;
-  max-width: 36px !important;
-  max-height: 36px !important;
-
-  padding: 0 !important;
-  margin: 0 !important;
-
-  display: flex;
-  flex-direction: column;
+.site-header.jovia-compact-glass .jovia-desktop-nav {
+  display: flex !important;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-
-  border-radius: 50% !important;
-  background: rgba(255, 255, 255, 0.045) !important;
-  border: 1px solid rgba(206, 170, 137, 0.55) !important;
-
-  box-sizing: border-box !important;
-  cursor: pointer;
-
-  transition:
-    background 0.25s ease,
-    border-color 0.25s ease;
+  gap: 22px;
+  min-width: 0;
 }
 
-.jovia-compact-glass .jovia-glass-menu:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(206, 170, 137, 0.85) !important;
+.jovia-desktop-nav .jovia-desktop-link {
+  font-size: 11px;
+  letter-spacing: 1.3px;
+  text-decoration: none;
+  white-space: nowrap;
+
+  transition: color 0.2s ease;
 }
 
-/* Hamburger icon lines */
+.jovia-desktop-nav .jovia-desktop-link:hover {
+  color: #e6a3be;
+}
 
-.site-header.jovia-compact-glass .jovia-glass-menu span {
-  display: block !important;
+/* Desktop menu button hidden */
 
-  width: 15px !important;
-  height: 1px !important;
-  min-height: 1px !important;
-
-  margin: 0 !important;
-  padding: 0 !important;
-
-  background: #fff2f7 !important;
-
-  transform: none !important;
-  position: static !important;
+.site-header.jovia-compact-glass .jovia-glass-menu {
+  display: none !important;
 }
 
 /* ==========================================
-   MOBILE HEADER
+   MOBILE AND TABLET
    ========================================== */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
+
   html body .site-header.jovia-compact-glass {
     height: 48px !important;
     min-height: 48px !important;
     max-height: 48px !important;
 
     padding: 0 16px !important;
+    gap: 12px !important;
   }
 
-  .site-header.jovia-compact-glass .jovia-glass-logo {
+  .site-header.jovia-compact-glass
+  .jovia-glass-logo {
     font-size: 12px !important;
     letter-spacing: 1px !important;
   }
 
-  .site-header.jovia-compact-glass .jovia-glass-menu {
+  /* Hide desktop links */
+
+  html body .site-header.jovia-compact-glass
+  .jovia-desktop-nav,
+  html body .site-header.jovia-compact-glass
+  .desktop-nav {
+    display: none !important;
+  }
+
+  /* Hide desktop booking button */
+
+  html body .site-header.jovia-compact-glass
+  .jovia-desktop-cta,
+  html body .site-header.jovia-compact-glass
+  .nav-cta {
+    display: none !important;
+  }
+
+  /* Show hamburger */
+
+  html body .site-header.jovia-compact-glass
+  .jovia-glass-menu {
+    display: flex !important;
+
     width: 32px !important;
     height: 32px !important;
 
     min-width: 32px !important;
     min-height: 32px !important;
+
     max-width: 32px !important;
     max-height: 32px !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    flex-shrink: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+
+    border-radius: 50% !important;
+
+    background:
+      rgba(255, 255, 255, 0.05) !important;
+
+    border:
+      1px solid rgba(206, 170, 137, 0.6) !important;
+
+    box-sizing: border-box !important;
+
+    cursor: pointer;
+    transition:
+      background 0.25s ease,
+      border-color 0.25s ease;
   }
 
-  .site-header.jovia-compact-glass .jovia-glass-menu span {
-    width: 13px !important;
+  .site-header.jovia-compact-glass
+  .jovia-glass-menu:hover {
+    background:
+      rgba(255, 255, 255, 0.14) !important;
+  }
+
+  /* Menu lines */
+
+  html body .site-header.jovia-compact-glass
+  .jovia-glass-menu span {
+    display: block !important;
+
+    width: 14px !important;
+    height: 1px !important;
+    min-height: 1px !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+
+    background: #fff1f6 !important;
+
+    position: static !important;
+    transform: none !important;
+
+    transition: transform 0.2s ease;
+  }
+
+  .site-header.jovia-compact-glass
+  .jovia-glass-menu.is-open span:first-child {
+    transform: translateY(3px) rotate(45deg) !important;
+  }
+
+  .site-header.jovia-compact-glass
+  .jovia-glass-menu.is-open span:last-child {
+    transform: translateY(-3px) rotate(-45deg) !important;
   }
 }
 
-/* Very small mobile screens */
+/* ==========================================
+   MOBILE MENU BACKDROP
+   ========================================== */
+
+.jovia-menu-backdrop {
+  position: fixed;
+  inset: 0;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  padding: 0;
+  border: 0;
+
+  background: rgba(0, 0, 0, 0.42);
+  z-index: 1190;
+  cursor: default;
+}
+
+/* ==========================================
+   MOBILE GLASS PANEL
+   ========================================== */
+
+html body .mobile-menu.jovia-mobile-panel {
+  position: fixed !important;
+
+  top: 56px !important;
+  right: 0 !important;
+  left: auto !important;
+  bottom: auto !important;
+
+  display: flex !important;
+  flex-direction: column !important;
+
+  width: min(330px, calc(100vw - 24px)) !important;
+  max-width: 100vw !important;
+  height: auto !important;
+  max-height: calc(100dvh - 64px) !important;
+
+  overflow-y: auto;
+  box-sizing: border-box;
+
+  padding: 20px !important;
+  margin: 0 !important;
+
+  background: rgba(25, 16, 28, 0.94) !important;
+
+  -webkit-backdrop-filter:
+    blur(22px) saturate(160%) !important;
+
+  backdrop-filter:
+    blur(22px) saturate(160%) !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0 0 0 18px !important;
+
+  box-shadow:
+    -8px 12px 35px rgba(0, 0, 0, 0.28) !important;
+
+  z-index: 1200 !important;
+}
+
+/* Panel heading */
+
+.jovia-mobile-panel-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jovia-mobile-title {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  color: #fff1f6;
+}
+
+/* Close button */
+
+html body .jovia-mobile-panel .jovia-mobile-close {
+  position: static !important;
+
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+
+  width: 30px;
+  height: 30px;
+
+  padding: 0;
+  margin: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* Navigation links */
+
+.jovia-mobile-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+html body .jovia-mobile-panel
+.jovia-mobile-links .jovia-mobile-link {
+  display: block !important;
+
+  width: 100%;
+  padding: 12px 10px !important;
+  margin: 0 !important;
+
+  color: #f8eff3 !important;
+  font-size: 12px !important;
+  font-weight: 500;
+  letter-spacing: 1.8px;
+
+  text-decoration: none !important;
+  text-align: left !important;
+
+  border-radius: 8px;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.jovia-mobile-panel
+.jovia-mobile-links .jovia-mobile-link:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f5b0ca !important;
+}
+
+/* Booking CTA */
+
+html body .jovia-mobile-panel .jovia-mobile-book {
+  display: block !important;
+
+  margin-top: 20px !important;
+  padding: 14px 12px !important;
+
+  background: #ce3477 !important;
+  color: #ffffff !important;
+
+  border-radius: 24px;
+
+  font-size: 11px !important;
+  font-weight: 600;
+  letter-spacing: 1.4px;
+  text-align: center !important;
+  text-decoration: none !important;
+}
+
+.jovia-mobile-panel .jovia-mobile-book:hover {
+  background: #e3458a !important;
+}
+
+/* Mobile menu position */
+
+@media (max-width: 900px) {
+  html body .mobile-menu.jovia-mobile-panel {
+    top: 48px !important;
+    max-height: calc(100dvh - 56px) !important;
+  }
+}
+
+/* Small screens */
 
 @media (max-width: 380px) {
   html body .site-header.jovia-compact-glass {
     padding: 0 12px !important;
+  }
+
+  html body .mobile-menu.jovia-mobile-panel {
+    width: min(310px, calc(100vw - 16px)) !important;
+    padding: 16px !important;
   }
 }

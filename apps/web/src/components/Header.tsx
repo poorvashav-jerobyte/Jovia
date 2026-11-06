@@ -13,7 +13,7 @@ const links = [
   ["Portfolio", "/#portfolio"],
   ["Reviews", "/#reviews"],
   ["Contact", "/contact"],
-];
+] as const;
 
 type CompanyDetails = {
   company_name?: string;
@@ -27,89 +27,112 @@ export default function Header() {
   useEffect(() => {
     const controller = new AbortController();
 
-    async function loadCompanyName() {
+    const loadCompanyName = async () => {
       try {
         const response = await fetch(
           `${API_URL}/company-details`,
-          {
-            signal: controller.signal,
-          }
+          { signal: controller.signal }
         );
 
         if (!response.ok) {
-          throw new Error(
-            "Unable to load company details"
-          );
+          throw new Error("Unable to load company details");
         }
 
-        const data: CompanyDetails =
-          await response.json();
+        const data: CompanyDetails = await response.json();
 
-        const name = data.company_name?.trim();
-
-        if (name) {
-          setCompanyName(name);
+        if (data.company_name?.trim()) {
+          setCompanyName(data.company_name.trim());
         }
       } catch (error) {
         if (!controller.signal.aborted) {
-          console.error(
-            "Company details:",
-            error
-          );
+          console.error("Company details:", error);
         }
       }
-    }
+    };
 
     void loadCompanyName();
 
-    return () => {
-      controller.abort();
-    };
+    return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    const handleResize = () => {
+      if (window.innerWidth > 900) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [open]);
 
   const closeMenu = () => setOpen(false);
 
-  const nav = links.map(([label, to]) =>
-    to.startsWith("/#") ? (
-      <a
-        key={label}
-        href={to}
-        onClick={closeMenu}
-      >
-        {label}
-      </a>
-    ) : (
-      <Link
-        key={label}
-        to={to}
-        onClick={closeMenu}
-      >
-        {label}
-      </Link>
-    )
-  );
+  const renderLinks = (mobile = false) =>
+    links.map(([label, to]) => {
+      const className = mobile
+        ? "jovia-mobile-link"
+        : "jovia-desktop-link";
+
+      if (to.startsWith("/#")) {
+        return (
+          <a
+            key={label}
+            href={to}
+            className={className}
+            onClick={closeMenu}
+          >
+            {label}
+          </a>
+        );
+      }
+
+      return (
+        <Link
+          key={label}
+          to={to}
+          className={className}
+          onClick={closeMenu}
+        >
+          {label}
+        </Link>
+      );
+    });
 
   return (
     <>
       <header className="site-header jovia-compact-glass">
         <Link
-          className="logo jovia-glass-logo"
           to="/"
+          className="logo jovia-glass-logo"
           onClick={closeMenu}
         >
           {companyName}
         </Link>
 
         <nav
-          className="desktop-nav"
+          className="desktop-nav jovia-desktop-nav"
           aria-label="Primary navigation"
         >
-          {nav}
+          {renderLinks()}
         </nav>
 
         <Link
-          className="nav-cta"
           to="/contact"
+          className="nav-cta jovia-desktop-cta"
           onClick={closeMenu}
         >
           Book Consultation
@@ -117,14 +140,15 @@ export default function Header() {
 
         <button
           type="button"
-          className="hamburger jovia-glass-menu"
+          className={`hamburger jovia-glass-menu ${
+            open ? "is-open" : ""
+          }`}
           aria-label={
-            open ? "Close menu" : "Open menu"
+            open ? "Close navigation menu" : "Open navigation menu"
           }
           aria-expanded={open}
-          onClick={() =>
-            setOpen((value) => !value)
-          }
+          aria-controls="jovia-mobile-navigation"
+          onClick={() => setOpen((value) => !value)}
         >
           <span />
           <span />
@@ -132,25 +156,47 @@ export default function Header() {
       </header>
 
       {open && (
-        <div className="mobile-menu">
+        <>
           <button
             type="button"
-            className="menu-close"
+            className="jovia-menu-backdrop"
             onClick={closeMenu}
-            aria-label="Close menu"
-          >
-            ×
-          </button>
+            aria-label="Close navigation menu"
+          />
 
-          {nav}
-
-          <Link
-            to="/contact"
-            onClick={closeMenu}
+          <nav
+            id="jovia-mobile-navigation"
+            className="mobile-menu jovia-mobile-panel"
+            aria-label="Mobile navigation"
           >
-            Book Consultation
-          </Link>
-        </div>
+            <div className="jovia-mobile-panel-top">
+              <span className="jovia-mobile-title">
+                {companyName}
+              </span>
+
+              <button
+                type="button"
+                className="menu-close jovia-mobile-close"
+                onClick={closeMenu}
+                aria-label="Close menu"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="jovia-mobile-links">
+              {renderLinks(true)}
+            </div>
+
+            <Link
+              to="/contact"
+              className="jovia-mobile-book"
+              onClick={closeMenu}
+            >
+              Book Consultation
+            </Link>
+          </nav>
+        </>
       )}
     </>
   );

@@ -13,9 +13,9 @@ import { rateLimit } from "express-rate-limit";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
 
-// ================================================
+// =====================================================
 // CONFIGURATION
-// ================================================
+// =====================================================
 
 const app = express();
 const port = Number(process.env.PORT || 4001);
@@ -45,7 +45,11 @@ const db =
     : null;
 
 app.disable("x-powered-by");
-app.use((helmet as unknown as () => express.RequestHandler)());
+
+app.use(
+  (helmet as unknown as () => express.RequestHandler)()
+);
+
 app.use(cors({ origin: origins }));
 app.use(express.json({ limit: "30kb" }));
 
@@ -61,20 +65,18 @@ const route = (
     res: Response,
     next: NextFunction
   ) => {
-    Promise.resolve(
-      handler(req, res, next)
-    ).catch(next);
+    Promise.resolve(handler(req, res, next)).catch(next);
   };
 };
 
-// ================================================
+// =====================================================
 // HEALTH CHECK
-// ================================================
+// =====================================================
 
 app.get("/api/health", (_req, res) => {
   res.json({
     success: true,
-    message: "Cult Contour API running",
+    message: "Jovia MUA API running",
     supabaseConfigured: Boolean(db),
   });
 });
@@ -112,14 +114,11 @@ app.get(
   })
 );
 
-// ================================================
-// PUBLIC SERVICES AND TESTIMONIALS
-// ================================================
+// =====================================================
+// PUBLIC SERVICES AND REVIEWS
+// =====================================================
 
-for (const table of [
-  "services",
-  "testimonials",
-] as const) {
+for (const table of ["services", "testimonials"] as const) {
   app.get(
     `/api/${table}`,
     route(async (_req, res) => {
@@ -140,7 +139,6 @@ for (const table of [
 
       if (error) {
         console.error(`Load ${table}:`, error);
-
         res.status(502).json({
           error: "Content temporarily unavailable",
         });
@@ -152,9 +150,9 @@ for (const table of [
   );
 }
 
-// ================================================
+// =====================================================
 // CONSULTATION INQUIRIES
-// ================================================
+// =====================================================
 
 const inquirySchema = z
   .object({
@@ -203,7 +201,6 @@ app.post(
       return;
     }
 
-    // Honeypot spam protection
     if (parsed.data.website) {
       res.json({ ok: true });
       return;
@@ -222,16 +219,13 @@ app.post(
       ...fields
     } = parsed.data;
 
-    const { error } = await db
-      .from("inquiries")
-      .insert({
-        ...fields,
-        event_date: event_date || null,
-      });
+    const { error } = await db.from("inquiries").insert({
+      ...fields,
+      event_date: event_date || null,
+    });
 
     if (error) {
       console.error("Save inquiry:", error);
-
       res.status(502).json({
         error: "Unable to save inquiry",
       });
@@ -245,75 +239,539 @@ app.post(
   })
 );
 
-// ================================================
-// ADMIN AUTHENTICATION
-// ================================================
+// =====================================================
+// ROLE TYPES
+// =====================================================
 
-const requireAdmin = route(
-  async (req, res, next) => {
-    if (!db) {
-      res.status(503).json({
-        error: "Database not configured",
-      });
-      return;
-    }
+type AdminRole =
+  | "super_admin"
+  | "admin"
+  | "manager"
+  | "member";
 
-    const token = req.headers.authorization?.match(
-      /^Bearer\s+(.+)$/i
-    )?.[1];
+function isAdminRole(value: unknown): value is AdminRole {
+  return (
+    value === "super_admin" ||
+    value === "admin" ||
+    value === "manager" ||
+    value === "member"
+  );
+}
 
-    if (!token) {
-      res.status(401).json({
-        error: "Authentication required",
-      });
-      return;
-    }
-
-    const {
-      data: { user },
-      error,
-    } = await db.auth.getUser(token);
-
-    if (error || !user) {
-      res.status(401).json({
-        error: "Invalid or expired session",
-      });
-      return;
-    }
-
-    const {
-      data: admin,
-      error: roleError,
-    } = await db
-      .from("admin_users")
-      .select("user_id")
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (roleError) {
-      console.error("Admin lookup:", roleError);
-
-      res.status(503).json({
-        error: "Unable to verify admin",
-      });
-      return;
-    }
-
-    if (!admin) {
-      res.status(403).json({
-        error: "Admin access required",
-      });
-      return;
-    }
-
-    res.locals.adminId = user.id;
-    next();
+function canAccessRoute(
+  roleName: AdminRole,
+  method: string,
+  path: string
+): boolean {
+  if (
+    roleName === "super_admin" ||
+    roleName === "admin"
+  ) {
+    return true;
   }
+
+  if (roleName === "manager") {
+    return method === "GET";
+  }
+
+  if (roleName === "member") {
+    return (
+      method === "GET" &&
+      [
+        "/api/admin/me",
+        "/api/admin/inquiries",
+        "/api/admin/services",
+      ].includes(path)
+    );
+  }
+
+  return false;
+}
+
+// =====================================================
+// ADMIN AUTHENTICATION
+// =====================================================
+
+const requireAdmin = route(async (req, res, next) => {
+  if (!db) {
+    res.status(503).json({
+      error: "Database not configured",
+    });
+    return;
+  }
+
+  const token = req.headers.authorization?.match(
+    /^Bearer\s+(.+)$/i
+  )?.[1];
+
+  if (!token) {
+    res.status(401).json({
+      error: "Authentication required",
+    });
+    return;
+  }
+
+  const {
+    data: { user },
+    error: authError,
+  } = await db.auth.getUser(token);
+
+  if (authError || !user) {
+    res.status(401).json({
+      error: "Invalid or expired session",
+    });
+    return;
+  }
+
+  const {
+    data: admin,
+    error: roleError,
+  } = await db
+    .from("admin_users")
+    .select("user_id,role,full_name,email")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (roleError) {
+    console.error("Admin lookup:", roleError);
+    res.status(503).json({
+      error: "Unable to verify admin",
+    });
+    return;
+  }
+
+  if (!admin || !isAdminRole(admin.role)) {
+    res.status(403).json({
+      error: "Admin panel access required",
+    });
+    return;
+  }
+
+  const roleName = admin.role;
+
+  if (!canAccessRoute(roleName, req.method, req.path)) {
+    res.status(403).json({
+      error:
+        roleName === "manager"
+          ? "Managers have read-only access"
+          : "You do not have permission to access this section",
+    });
+    return;
+  }
+
+  res.locals.adminId = user.id;
+  res.locals.adminRole = roleName;
+  res.locals.adminEmail = user.email || "";
+  res.locals.adminName =
+    admin.full_name ||
+    user.user_metadata?.full_name ||
+    "";
+
+  next();
+});
+
+// =====================================================
+// USER MANAGEMENT VALIDATION
+// =====================================================
+
+const newUserSchema = z
+  .object({
+    full_name: z.string().trim().min(2).max(100),
+
+    email: z
+      .string()
+      .trim()
+      .email()
+      .max(254)
+      .transform((value) => value.toLowerCase()),
+
+    password: z.string().min(12).max(128),
+
+    role: z.enum(["admin", "manager", "member"]),
+  })
+  .strict();
+
+const updateUserSchema = z
+  .object({
+    role: z.enum(["admin", "manager", "member"]),
+  })
+  .strict();
+
+const userCreationLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 15,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});
+
+// =====================================================
+// GET CURRENT ADMIN PROFILE
+// =====================================================
+
+app.get("/api/admin/me", requireAdmin, (_req, res) => {
+  res.json({
+    user_id: res.locals.adminId,
+    email: res.locals.adminEmail,
+    full_name: res.locals.adminName,
+    role: res.locals.adminRole,
+  });
+});
+
+// =====================================================
+// LIST USERS
+// =====================================================
+
+app.get(
+  "/api/admin/user-access",
+  requireAdmin,
+  route(async (_req, res) => {
+    const { data, error } = await db!
+      .from("admin_users")
+      .select("user_id,full_name,email,role")
+      .order("full_name", {
+        ascending: true,
+      });
+
+    if (error) {
+      console.error("List admin users:", error);
+      res.status(502).json({
+        error: "Unable to list users",
+      });
+      return;
+    }
+
+    res.json(
+      (data ?? []).map((row) => ({
+        user_id: row.user_id,
+        full_name: row.full_name || "",
+        email: row.email || "",
+        role: row.role,
+      }))
+    );
+  })
 );
 
-// ================================================
-// ADMIN INQUIRY MANAGEMENT
-// ================================================
+// =====================================================
+// ADD USER
+// =====================================================
+
+app.post(
+  "/api/admin/user-access",
+  requireAdmin,
+  userCreationLimiter,
+  route(async (req, res) => {
+    const parsed = newUserSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).json({
+        error: "Invalid user details",
+        details: parsed.error.flatten().fieldErrors,
+      });
+      return;
+    }
+
+    const { full_name, email, password, role } =
+      parsed.data;
+
+    const {
+      data: created,
+      error: authError,
+    } = await db!.auth.admin.createUser({
+      email,
+      password,
+      email_confirm: true,
+      user_metadata: {
+        full_name,
+      },
+    });
+
+    if (authError || !created.user) {
+      res.status(authError?.status === 422 ? 409 : 400).json({
+        error:
+          authError?.message ||
+          "Unable to create user",
+      });
+      return;
+    }
+
+    const userId = created.user.id;
+
+    const { error: profileError } = await db!
+      .from("admin_users")
+      .insert({
+        user_id: userId,
+        full_name,
+        email,
+        role,
+      });
+
+    if (profileError) {
+      console.error("Create user profile:", profileError);
+
+      const { error: rollbackError } =
+        await db!.auth.admin.deleteUser(userId);
+
+      if (rollbackError) {
+        console.error(
+          "Account creation rollback failed:",
+          rollbackError
+        );
+      }
+
+      res.status(502).json({
+        error:
+          "Unable to save user permissions. Account creation was rolled back where possible.",
+      });
+      return;
+    }
+
+    res.status(201).json({
+      user_id: userId,
+      full_name,
+      email,
+      role,
+    });
+  })
+);
+
+// =====================================================
+// UPDATE USER ROLE
+// =====================================================
+
+app.patch(
+  "/api/admin/user-access/:id",
+  requireAdmin,
+  route(async (req, res) => {
+    const id = z
+      .string()
+      .uuid()
+      .safeParse(req.params.id);
+
+    const parsed = updateUserSchema.safeParse(req.body);
+
+    if (!id.success || !parsed.success) {
+      res.status(400).json({
+        error: "Invalid user or role",
+      });
+      return;
+    }
+
+    if (id.data === res.locals.adminId) {
+      res.status(409).json({
+        error: "You cannot change your own role",
+      });
+      return;
+    }
+
+    const { data: target, error: lookupError } =
+      await db!
+        .from("admin_users")
+        .select("user_id,role,email")
+        .eq("user_id", id.data)
+        .maybeSingle();
+
+    if (lookupError) {
+      console.error("Role lookup:", lookupError);
+      res.status(502).json({
+        error: "Unable to verify user role",
+      });
+      return;
+    }
+
+    if (!target) {
+      res.status(404).json({
+        error: "User not found",
+      });
+      return;
+    }
+
+    if (target.role === "super_admin") {
+      res.status(403).json({
+        error: "Super Admin role is protected",
+      });
+      return;
+    }
+
+    // Only the owner can change another Admin's role.
+    if (
+      target.role === "admin" &&
+      res.locals.adminRole !== "super_admin"
+    ) {
+      res.status(403).json({
+        error: "Only Super Admin can change an Admin's role",
+      });
+      return;
+    }
+
+    if (
+      target.role === "admin" &&
+      parsed.data.role !== "admin"
+    ) {
+      const { count, error: countError } = await db!
+        .from("admin_users")
+        .select("user_id", {
+          count: "exact",
+          head: true,
+        })
+        .in("role", ["admin", "super_admin"]);
+
+      if (
+        countError ||
+        count === null ||
+        count <= 1
+      ) {
+        res.status(409).json({
+          error: "At least one administrator must remain",
+        });
+        return;
+      }
+    }
+
+    const { data, error } = await db!
+      .from("admin_users")
+      .update({
+        role: parsed.data.role,
+      })
+      .eq("user_id", id.data)
+      .select("user_id,full_name,email,role")
+      .single();
+
+    if (error) {
+      console.error("Update user role:", error);
+      res.status(502).json({
+        error: "Unable to update user role",
+      });
+      return;
+    }
+
+    res.json(data);
+  })
+);
+
+// =====================================================
+// REMOVE USER
+// =====================================================
+
+app.delete(
+  "/api/admin/user-access/:id",
+  requireAdmin,
+  route(async (req, res) => {
+    const id = z
+      .string()
+      .uuid()
+      .safeParse(req.params.id);
+
+    if (!id.success) {
+      res.status(400).json({
+        error: "Invalid user ID",
+      });
+      return;
+    }
+
+    if (id.data === res.locals.adminId) {
+      res.status(409).json({
+        error: "You cannot remove your own account",
+      });
+      return;
+    }
+
+    const { data: target, error: lookupError } =
+      await db!
+        .from("admin_users")
+        .select("user_id,role,email,full_name")
+        .eq("user_id", id.data)
+        .maybeSingle();
+
+    if (lookupError) {
+      console.error("User removal lookup:", lookupError);
+      res.status(502).json({
+        error: "Unable to verify the selected user",
+      });
+      return;
+    }
+
+    if (!target) {
+      res.status(404).json({
+        error: "User not found",
+      });
+      return;
+    }
+
+    if (target.role === "super_admin") {
+      res.status(403).json({
+        error: "Super Admin cannot be removed",
+      });
+      return;
+    }
+
+    if (
+      target.role === "admin" &&
+      res.locals.adminRole !== "super_admin"
+    ) {
+      res.status(403).json({
+        error: "Only Super Admin can remove another Admin",
+      });
+      return;
+    }
+
+    if (target.role === "admin") {
+      const { count, error: countError } = await db!
+        .from("admin_users")
+        .select("user_id", {
+          count: "exact",
+          head: true,
+        })
+        .in("role", ["admin", "super_admin"]);
+
+      if (
+        countError ||
+        count === null ||
+        count <= 1
+      ) {
+        res.status(409).json({
+          error: "The last administrator cannot be removed",
+        });
+        return;
+      }
+    }
+
+    // Revoke application access before deleting the Auth account.
+    const { error: revokeError } = await db!
+      .from("admin_users")
+      .delete()
+      .eq("user_id", id.data);
+
+    if (revokeError) {
+      console.error("Revoke admin access:", revokeError);
+      res.status(502).json({
+        error: "Unable to revoke user access",
+      });
+      return;
+    }
+
+    const { error: deleteAuthError } =
+      await db!.auth.admin.deleteUser(id.data);
+
+    if (deleteAuthError) {
+      console.error("Delete user auth:", deleteAuthError);
+
+      res.status(502).json({
+        error:
+          "Admin access was revoked, but the login account could not be deleted. Complete cleanup in Supabase Auth.",
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      user_id: id.data,
+    });
+  })
+);
+
+// =====================================================
+// ADMIN BOOKINGS
+// =====================================================
 
 app.get(
   "/api/admin/inquiries",
@@ -331,7 +789,6 @@ app.get(
 
     if (error) {
       console.error("Load inquiries:", error);
-
       res.status(502).json({
         error: "Unable to load inquiries",
       });
@@ -379,7 +836,6 @@ app.patch(
 
     if (error) {
       console.error("Update inquiry:", error);
-
       res.status(502).json({
         error: "Unable to update inquiry",
       });
@@ -397,9 +853,9 @@ app.patch(
   })
 );
 
-// ================================================
+// =====================================================
 // SERVICE IMAGE PATH VALIDATION
-// ================================================
+// =====================================================
 
 function validImagePath(path: string): boolean {
   const isLocalImage =
@@ -421,16 +877,18 @@ function validImagePath(path: string): boolean {
       incoming.origin === expected.origin &&
       storagePath.test(incoming.pathname) &&
       !incoming.search &&
-      !incoming.hash
+      !incoming.hash &&
+      !incoming.username &&
+      !incoming.password
     );
   } catch {
     return false;
   }
 }
 
-// ================================================
-// SERVICE VALIDATION
-// ================================================
+// =====================================================
+// SERVICE SCHEMA
+// =====================================================
 
 const serviceSchema = z
   .object({
@@ -473,9 +931,9 @@ const serviceSchema = z
   })
   .strict();
 
-// ================================================
-// ADMIN SERVICES LIST
-// ================================================
+// =====================================================
+// LIST SERVICES
+// =====================================================
 
 app.get(
   "/api/admin/services",
@@ -495,7 +953,6 @@ app.get(
 
     if (error) {
       console.error("List services:", error);
-
       res.status(502).json({
         error: "Unable to load services",
       });
@@ -506,9 +963,9 @@ app.get(
   })
 );
 
-// ================================================
+// =====================================================
 // CREATE SERVICE
-// ================================================
+// =====================================================
 
 app.post(
   "/api/admin/services",
@@ -531,18 +988,13 @@ app.post(
       .single();
 
     if (error) {
-      if (error.code === "23505") {
-        res.status(409).json({
-          error:
-            "A service with this identifier already exists",
-        });
-        return;
-      }
-
       console.error("Create service:", error);
 
-      res.status(502).json({
-        error: "Unable to create service",
+      res.status(error.code === "23505" ? 409 : 502).json({
+        error:
+          error.code === "23505"
+            ? "Service identifier already exists"
+            : "Unable to create service",
       });
       return;
     }
@@ -551,9 +1003,9 @@ app.post(
   })
 );
 
-// ================================================
+// =====================================================
 // UPDATE SERVICE
-// ================================================
+// =====================================================
 
 app.patch(
   "/api/admin/services/:id",
@@ -581,18 +1033,12 @@ app.patch(
       .maybeSingle();
 
     if (error) {
-      if (error.code === "23505") {
-        res.status(409).json({
-          error:
-            "A service with this identifier already exists",
-        });
-        return;
-      }
-
       console.error("Update service:", error);
-
-      res.status(502).json({
-        error: "Unable to update service",
+      res.status(error.code === "23505" ? 409 : 502).json({
+        error:
+          error.code === "23505"
+            ? "Service identifier already exists"
+            : "Unable to update service",
       });
       return;
     }
@@ -608,9 +1054,9 @@ app.patch(
   })
 );
 
-// ================================================
-// IMAGE UPLOAD CONFIGURATION
-// ================================================
+// =====================================================
+// UPLOAD CONFIGURATION
+// =====================================================
 
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
 
@@ -629,7 +1075,6 @@ function identifyImage(
   extension: string;
   contentType: string;
 } | null {
-  // PNG
   if (
     data.length >= 8 &&
     data.subarray(0, 8).equals(
@@ -645,7 +1090,6 @@ function identifyImage(
     };
   }
 
-  // JPEG
   if (
     data.length >= 3 &&
     data.subarray(0, 3).toString("hex") === "ffd8ff"
@@ -656,7 +1100,6 @@ function identifyImage(
     };
   }
 
-  // WebP
   if (
     data.length >= 12 &&
     data.toString("ascii", 0, 4) === "RIFF" &&
@@ -671,203 +1114,155 @@ function identifyImage(
   return null;
 }
 
-// ================================================
-// ADMIN SERVICE IMAGE UPLOAD
-// ================================================
+type ImageFolder = "services" | "reviews" | "artists";
+type ImageField = "image_path" | "photo_url";
+
+async function uploadAdminImage(
+  req: Request,
+  res: Response,
+  folder: ImageFolder,
+  responseField: ImageField
+): Promise<void> {
+  if (!db) {
+    res.status(503).json({
+      error: "Database not configured",
+    });
+    return;
+  }
+
+  if (
+    !Buffer.isBuffer(req.body) ||
+    !req.body.length ||
+    req.body.length > MAX_IMAGE_SIZE
+  ) {
+    res.status(400).json({
+      error: "Select an image up to 5 MB",
+    });
+    return;
+  }
+
+  const actual = identifyImage(req.body);
+
+  const declared = req
+    .get("Content-Type")
+    ?.split(";")[0]
+    .trim()
+    .toLowerCase();
+
+  if (!actual || declared !== actual.contentType) {
+    res.status(415).json({
+      error:
+        "Only genuine JPG, PNG, or WebP images are supported",
+    });
+    return;
+  }
+
+  const objectPath =
+    `${folder}/${randomUUID()}.${actual.extension}`;
+
+  const { error } = await db.storage
+    .from("service-images")
+    .upload(objectPath, req.body, {
+      contentType: actual.contentType,
+      cacheControl:
+        folder === "artists" ? "3600" : "31536000",
+      upsert: false,
+    });
+
+  if (error) {
+    console.error("Upload image:", error);
+    res.status(502).json({
+      error: "Image upload failed. Check the Storage bucket.",
+    });
+    return;
+  }
+
+  const { data } = db.storage
+    .from("service-images")
+    .getPublicUrl(objectPath);
+
+  res.status(201).json({
+    [responseField]: data.publicUrl,
+  });
+}
+
+// =====================================================
+// IMAGE UPLOAD ENDPOINTS
+// =====================================================
 
 app.post(
   "/api/admin/services/upload",
   requireAdmin,
   parseImage,
   route(async (req, res) => {
-    if (
-      !Buffer.isBuffer(req.body) ||
-      !req.body.length ||
-      req.body.length > MAX_IMAGE_SIZE
-    ) {
-      res.status(400).json({
-        error: "Select an image smaller than 5 MB",
-      });
-      return;
-    }
-
-    const actual = identifyImage(req.body);
-
-    const requestContentType = req
-      .get("Content-Type")
-      ?.split(";")[0]
-      .trim()
-      .toLowerCase();
-
-    if (
-      !actual ||
-      requestContentType !== actual.contentType
-    ) {
-      res.status(415).json({
-        error:
-          "Only real PNG, JPEG, and WebP images are supported",
-      });
-      return;
-    }
-
-    const objectPath =
-      `services/${randomUUID()}.${actual.extension}`;
-
-    const { error } = await db!
-      .storage
-      .from("service-images")
-      .upload(objectPath, req.body, {
-        contentType: actual.contentType,
-        cacheControl: "31536000",
-        upsert: false,
-      });
-
-    if (error) {
-      console.error("Upload service image:", error);
-
-      res.status(502).json({
-        error:
-          "Image upload failed. Check the service-images Storage bucket.",
-      });
-      return;
-    }
-
-    const { data } = db!
-      .storage
-      .from("service-images")
-      .getPublicUrl(objectPath);
-
-    res.status(201).json({
-      image_path: data.publicUrl,
-    });
+    await uploadAdminImage(
+      req,
+      res,
+      "services",
+      "image_path"
+    );
   })
 );
-
-// ================================================
-// CUSTOMER REVIEW PHOTO UPLOAD
-// ================================================
-
-// Admin-only photo upload.
-// Maximum 5 MB per photo.
-// Supported formats: JPG, PNG, WebP.
 
 app.post(
   "/api/admin/testimonials/upload",
   requireAdmin,
   parseImage,
   route(async (req, res) => {
-    if (
-      !Buffer.isBuffer(req.body) ||
-      !req.body.length ||
-      req.body.length > MAX_IMAGE_SIZE
-    ) {
-      res.status(400).json({
-        error: "Choose an image up to 5 MB",
-      });
-      return;
-    }
-
-    const actual = identifyImage(req.body);
-
-    const declared = req
-      .get("Content-Type")
-      ?.split(";")[0]
-      .trim()
-      .toLowerCase();
-
-    if (
-      !actual ||
-      declared !== actual.contentType
-    ) {
-      res.status(415).json({
-        error: "Use JPG, PNG or WebP images",
-      });
-      return;
-    }
-
-    const objectPath =
-      `reviews/${randomUUID()}.${actual.extension}`;
-
-    const { error } = await db!
-      .storage
-      .from("service-images")
-      .upload(objectPath, req.body, {
-        contentType: actual.contentType,
-        cacheControl: "31536000",
-        upsert: false,
-      });
-
-    if (error) {
-      console.error("Review photo upload:", error);
-
-      res.status(502).json({
-        error:
-          "Photo upload failed. Check service-images bucket configuration.",
-      });
-      return;
-    }
-
-    const { data } = db!
-      .storage
-      .from("service-images")
-      .getPublicUrl(objectPath);
-
-    res.status(201).json({
-      photo_url: data.publicUrl,
-    });
+    await uploadAdminImage(
+      req,
+      res,
+      "reviews",
+      "photo_url"
+    );
   })
 );
 
-// ================================================
-// CUSTOMER REVIEW VALIDATION
-// ================================================
+app.post(
+  "/api/admin/artist-details/upload",
+  requireAdmin,
+  parseImage,
+  route(async (req, res) => {
+    await uploadAdminImage(
+      req,
+      res,
+      "artists",
+      "photo_url"
+    );
+  })
+);
+
+// =====================================================
+// TESTIMONIAL VALIDATION
+// =====================================================
 
 const testimonialSchema = z
   .object({
-    // Customer name
-    author: z
-      .string()
-      .trim()
-      .min(2)
-      .max(120),
+    author: z.string().trim().min(2).max(120),
 
-    // Customer feedback
-    quote: z
-      .string()
-      .trim()
-      .min(10)
-      .max(2000),
+    quote: z.string().trim().min(10).max(2000),
 
-    // Optional review context
-    context: z
-      .string()
-      .trim()
-      .max(200),
+    context: z.string().trim().max(200),
 
-    // Display order
     display_order: z
       .number()
       .int()
       .min(0)
       .max(10000),
 
-    // Publish or draft
     published: z.boolean(),
 
-    // Customer review date
     review_date: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/)
       .nullable(),
 
-    // Makeup service taken
     service_name: z
       .string()
       .trim()
       .min(1)
       .max(120),
 
-    // Rating: 1 to 5 stars
     rating: z
       .number()
       .int()
@@ -875,18 +1270,15 @@ const testimonialSchema = z
       .max(5)
       .nullable(),
 
-    // Maximum 5 photos per customer review
     photos: z
-      .array(
-        z.string().url().max(1200)
-      )
+      .array(z.string().url().max(1200))
       .max(5),
   })
   .strict();
 
-// ================================================
-// GET ALL CUSTOMER REVIEWS - ADMIN
-// ================================================
+// =====================================================
+// LIST REVIEWS
+// =====================================================
 
 app.get(
   "/api/admin/testimonials",
@@ -906,7 +1298,6 @@ app.get(
 
     if (error) {
       console.error("Load testimonials:", error);
-
       res.status(502).json({
         error: "Unable to load testimonials",
       });
@@ -917,22 +1308,20 @@ app.get(
   })
 );
 
-// ================================================
-// CREATE CUSTOMER REVIEW
-// ================================================
+// =====================================================
+// CREATE REVIEW
+// =====================================================
 
 app.post(
   "/api/admin/testimonials",
   requireAdmin,
   route(async (req, res) => {
-    const parsed =
-      testimonialSchema.safeParse(req.body);
+    const parsed = testimonialSchema.safeParse(req.body);
 
     if (!parsed.success) {
       res.status(400).json({
         error: "Invalid testimonial details",
-        details:
-          parsed.error.flatten().fieldErrors,
+        details: parsed.error.flatten().fieldErrors,
       });
       return;
     }
@@ -945,7 +1334,6 @@ app.post(
 
     if (error) {
       console.error("Create testimonial:", error);
-
       res.status(502).json({
         error: "Unable to create testimonial",
       });
@@ -956,9 +1344,9 @@ app.post(
   })
 );
 
-// ================================================
-// UPDATE CUSTOMER REVIEW
-// ================================================
+// =====================================================
+// UPDATE REVIEW
+// =====================================================
 
 app.patch(
   "/api/admin/testimonials/:id",
@@ -969,8 +1357,7 @@ app.patch(
       .uuid()
       .safeParse(req.params.id);
 
-    const parsed =
-      testimonialSchema.safeParse(req.body);
+    const parsed = testimonialSchema.safeParse(req.body);
 
     if (!id.success || !parsed.success) {
       res.status(400).json({
@@ -988,7 +1375,6 @@ app.patch(
 
     if (error) {
       console.error("Update testimonial:", error);
-
       res.status(502).json({
         error: "Unable to update testimonial",
       });
@@ -1006,17 +1392,13 @@ app.patch(
   })
 );
 
-// ================================================
-// COMPANY DETAILS - VALIDATION
-// ================================================
+// =====================================================
+// COMPANY DETAILS VALIDATION
+// =====================================================
 
 const companyDetailsSchema = z
   .object({
-    company_name: z
-      .string()
-      .trim()
-      .min(2)
-      .max(120),
+    company_name: z.string().trim().min(2).max(120),
 
     instagram_url: z
       .string()
@@ -1058,9 +1440,9 @@ const companyDetailsSchema = z
   })
   .strict();
 
-// ================================================
+// =====================================================
 // PUBLIC COMPANY DETAILS
-// ================================================
+// =====================================================
 
 app.get(
   "/api/company-details",
@@ -1081,11 +1463,7 @@ app.get(
       .maybeSingle();
 
     if (error) {
-      console.error(
-        "Public company details:",
-        error
-      );
-
+      console.error("Public company details:", error);
       res.status(502).json({
         error: "Unable to load company details",
       });
@@ -1094,7 +1472,7 @@ app.get(
 
     res.json({
       company_name:
-        data?.company_name ?? "Cult Contour",
+        data?.company_name ?? "Jovia MUA",
       instagram_url:
         data?.instagram_url ?? "",
       whatsapp_number:
@@ -1103,9 +1481,9 @@ app.get(
   })
 );
 
-// ================================================
-// ADMIN - GET COMPANY DETAILS
-// ================================================
+// =====================================================
+// ADMIN COMPANY DETAILS
+// =====================================================
 
 app.get(
   "/api/admin/company-details",
@@ -1120,11 +1498,7 @@ app.get(
       .maybeSingle();
 
     if (error) {
-      console.error(
-        "Admin company details:",
-        error
-      );
-
+      console.error("Admin company details:", error);
       res.status(502).json({
         error: "Unable to load company details",
       });
@@ -1133,7 +1507,7 @@ app.get(
 
     res.json({
       company_name:
-        data?.company_name ?? "Cult Contour",
+        data?.company_name ?? "Jovia MUA",
       instagram_url:
         data?.instagram_url ?? "",
       whatsapp_number:
@@ -1142,22 +1516,16 @@ app.get(
   })
 );
 
-// ================================================
-// ADMIN - SAVE COMPANY DETAILS
-// ================================================
-
 app.put(
   "/api/admin/company-details",
   requireAdmin,
   route(async (req, res) => {
-    const parsed =
-      companyDetailsSchema.safeParse(req.body);
+    const parsed = companyDetailsSchema.safeParse(req.body);
 
     if (!parsed.success) {
       res.status(400).json({
         error: "Invalid company details",
-        details:
-          parsed.error.flatten().fieldErrors,
+        details: parsed.error.flatten().fieldErrors,
       });
       return;
     }
@@ -1168,12 +1536,9 @@ app.put(
         {
           id: 1,
           ...parsed.data,
-          updated_at:
-            new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         },
-        {
-          onConflict: "id",
-        }
+        { onConflict: "id" }
       )
       .select(
         "company_name,instagram_url,whatsapp_number"
@@ -1181,11 +1546,7 @@ app.put(
       .single();
 
     if (error) {
-      console.error(
-        "Save company details:",
-        error
-      );
-
+      console.error("Save company details:", error);
       res.status(502).json({
         error: "Unable to save company details",
       });
@@ -1196,9 +1557,192 @@ app.put(
   })
 );
 
-// ================================================
+// =====================================================
+// ARTIST DETAILS
+// =====================================================
+
+const artistFields =
+  "section_label,artist_name,professional_title,biography,photo_url";
+
+const defaultArtist = {
+  section_label: "THE ARTIST",
+  artist_name: "Namrata Vij",
+  professional_title:
+    "International Luxury Makeup Artist · Beauty Educator · Entrepreneur",
+  biography:
+    "Namrata Vij is an international luxury makeup artist known for creating modern, timeless, and sophisticated beauty experiences. From bridal transformations and destination weddings to editorial campaigns, fashion shows and special events, she creates looks that feel effortlessly elegant and uniquely personal.\n\nHolding an MBA in Marketing from the University of Technology Sydney and founder of Jovia MUA, Namrata brings together artistic excellence and a deep understanding of client experience.",
+  photo_url: "/pictures/home-self.png" as string | null,
+};
+
+function validArtistPhoto(
+  value: string | null
+): boolean {
+  if (
+    value === null ||
+    value === "/pictures/home-self.png"
+  ) {
+    return true;
+  }
+
+  if (!supabaseUrl) return false;
+
+  try {
+    const actual = new URL(value);
+    const expected = new URL(supabaseUrl);
+
+    return (
+      actual.protocol === "https:" &&
+      actual.origin === expected.origin &&
+      /^\/storage\/v1\/object\/public\/service-images\/artists\/[a-zA-Z0-9_.-]+$/.test(
+        actual.pathname
+      ) &&
+      !actual.search &&
+      !actual.hash &&
+      !actual.username &&
+      !actual.password
+    );
+  } catch {
+    return false;
+  }
+}
+
+const artistDetailsSchema = z
+  .object({
+    section_label: z
+      .string()
+      .trim()
+      .min(2)
+      .max(80),
+
+    artist_name: z
+      .string()
+      .trim()
+      .min(2)
+      .max(160),
+
+    professional_title: z
+      .string()
+      .trim()
+      .min(2)
+      .max(400),
+
+    biography: z
+      .string()
+      .trim()
+      .min(20)
+      .max(10000),
+
+    photo_url: z
+      .string()
+      .max(1200)
+      .nullable()
+      .refine(
+        validArtistPhoto,
+        "Invalid artist photo URL"
+      ),
+  })
+  .strict();
+
+// =====================================================
+// PUBLIC ARTIST DETAILS
+// =====================================================
+
+app.get(
+  "/api/artist-details",
+  route(async (_req, res) => {
+    if (!db) {
+      res.status(503).json({
+        error: "Database not configured",
+      });
+      return;
+    }
+
+    const { data, error } = await db
+      .from("artist_details")
+      .select(artistFields)
+      .eq("id", 1)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Public artist details:", error);
+      res.status(502).json({
+        error: "Unable to load artist details",
+      });
+      return;
+    }
+
+    res.json(data ?? defaultArtist);
+  })
+);
+
+// =====================================================
+// ADMIN ARTIST DETAILS
+// =====================================================
+
+app.get(
+  "/api/admin/artist-details",
+  requireAdmin,
+  route(async (_req, res) => {
+    const { data, error } = await db!
+      .from("artist_details")
+      .select(artistFields)
+      .eq("id", 1)
+      .maybeSingle();
+
+    if (error) {
+      console.error("Admin artist details:", error);
+      res.status(502).json({
+        error: "Unable to load artist details",
+      });
+      return;
+    }
+
+    res.json(data ?? defaultArtist);
+  })
+);
+
+app.put(
+  "/api/admin/artist-details",
+  requireAdmin,
+  route(async (req, res) => {
+    const parsed = artistDetailsSchema.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).json({
+        error: "Invalid artist details",
+        details: parsed.error.flatten().fieldErrors,
+      });
+      return;
+    }
+
+    const { data, error } = await db!
+      .from("artist_details")
+      .upsert(
+        {
+          id: 1,
+          ...parsed.data,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "id" }
+      )
+      .select(artistFields)
+      .single();
+
+    if (error) {
+      console.error("Save artist details:", error);
+      res.status(502).json({
+        error: "Unable to save artist details",
+      });
+      return;
+    }
+
+    res.json(data);
+  })
+);
+
+// =====================================================
 // 404 HANDLER
-// ================================================
+// =====================================================
 
 app.use((_req, res) => {
   res.status(404).json({
@@ -1206,9 +1750,9 @@ app.use((_req, res) => {
   });
 });
 
-// ================================================
+// =====================================================
 // GLOBAL ERROR HANDLER
-// ================================================
+// =====================================================
 
 app.use(
   (
@@ -1237,9 +1781,9 @@ app.use(
   }
 );
 
-// ================================================
+// =====================================================
 // START SERVER
-// ================================================
+// =====================================================
 
 app.listen(port, () => {
   console.log(
@@ -1247,6 +1791,8 @@ app.listen(port, () => {
   );
 
   console.log(
-    `Supabase: ${db ? "configured" : "not configured"}`
+    `Supabase: ${
+      db ? "configured" : "not configured"
+    }`
   );
 });
