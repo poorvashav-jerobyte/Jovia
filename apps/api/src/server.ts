@@ -45,7 +45,7 @@ const db =
     : null;
 
 app.disable("x-powered-by");
-app.use(helmet());
+app.use((helmet as unknown as () => express.RequestHandler)());
 app.use(cors({ origin: origins }));
 app.use(express.json({ limit: "30kb" }));
 
