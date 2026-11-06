@@ -25,21 +25,22 @@ jobs:
         env:
           SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
         run: |
+          set -e
+
           if [ -z "$SYNC_TOKEN" ]; then
-            echo "ERROR: AUTO_SYNC_JOVIA secret is empty"
+            echo "ERROR: AUTO_SYNC_JOVIA secret is missing"
             exit 1
           fi
 
           AUTH=$(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w 0)
 
           git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
-            ls-remote \
-            https://github.com/PoorvashaV/jovia.git \
-            HEAD >/dev/null
+            ls-remote https://github.com/PoorvashaV/jovia.git HEAD \
+            >/dev/null
 
-          echo "Destination repository access successful"
+          echo "Destination access verified"
 
-      - name: Compare repository histories
+      - name: Establish common repository history and sync
         env:
           SYNC_TOKEN: ${{ secrets.AUTO_SYNC_JOVIA }}
         run: |
@@ -47,43 +48,25 @@ jobs:
 
           AUTH=$(printf 'x-access-token:%s' "$SYNC_TOKEN" | base64 -w 0)
 
-          echo "Fetching Vercel repository history..."
-
           git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
-            fetch \
-            https://github.com/PoorvashaV/jovia.git \
+            fetch https://github.com/PoorvashaV/jovia.git \
             +refs/heads/main:refs/remotes/vercel/main
 
-          echo ""
-          echo "=== ORIGINAL ONLY COMMITS ==="
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git log --oneline vercel/main..HEAD
+          if ! git merge-base HEAD vercel/main >/dev/null; then
+            echo "Unrelated histories detected"
 
-          echo ""
-          echo "=== VERCEL ONLY COMMITS ==="
-
-          git log --oneline HEAD..vercel/main
-
-          echo ""
-          echo "=== COMMON ANCESTOR ==="
-
-          if git merge-base HEAD vercel/main; then
-            echo "Common history found"
+            git merge -s ours \
+              --allow-unrelated-histories \
+              --no-edit \
+              vercel/main
           else
-            echo "No common ancestor found"
+            echo "Common history already exists"
           fi
 
-          echo ""
-          echo "=== REPOSITORY STATUS ==="
+          git -c http.extraheader="AUTHORIZATION: basic $AUTH" \
+            push https://github.com/PoorvashaV/jovia.git HEAD:main
 
-          if git merge-base --is-ancestor vercel/main HEAD; then
-            echo "FAST_FORWARD_POSSIBLE"
-          elif git merge-base --is-ancestor HEAD vercel/main; then
-            echo "VERCEL_REPOSITORY_AHEAD"
-          else
-            echo "HISTORIES_DIVERGED"
-          fi
-
-          echo ""
-          echo "Comparison completed successfully"
-          echo "No changes pushed to destination repository"
+          echo "Synchronization completed"
